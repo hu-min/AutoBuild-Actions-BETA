@@ -1,0 +1,97 @@
+#=======================================================
+# Description: Build OpenWrt using GitHub Actions
+# Github: https://github.com/Hyy2001X/AutoBuild-Actions
+# Lisence: MIT
+# Author: P3TERX
+# Modify: Hyy2001
+#=======================================================
+
+name: AutoBuild OpenWrt
+
+on: 
+#  release:
+#    types: [published]
+
+#  push:
+#    branches: 
+#      - main
+
+#  schedule:
+#    - cron: 0 8 * * 5
+  
+  watch:
+    types: [started]
+
+env:
+  REPO_URL: https://github.com/coolsnowwolf/lede
+  REPO_BRANCH: master
+  CONFIG_FILE: .config
+  FEEDS_CONF_DEFAULT: ./Customize/feeds.conf.default
+  MAC80211: ./Customize/mac80211.sh
+  MWAN3: ./Customize/mwan3
+  CUSTOM_SCRIPT: ./Scripts/diy-script.sh
+  TZ: Asia/Shanghai
+
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@main
+
+    - name: Initialization environment
+      env:
+        DEBIAN_FRONTEND: noninteractive
+      run: |
+        sudo -E apt-get update
+        sudo -E apt-get install build-essential asciidoc binutils bzip2 gawk gettext git libncurses5-dev libz-dev patch python3 python2.7 unzip zlib1g-dev lib32gcc1 libc6-dev-i386 subversion flex uglifyjs git-core gcc-multilib p7zip p7zip-full msmtp libssl-dev texinfo libglib2.0-dev xmlto qemu-utils upx libelf-dev autoconf automake libtool autopoint device-tree-compiler g++-multilib antlr3 gperf wget curl swig rsync
+
+    - name: Clone OpenWRT source code
+      run: |
+        git clone -b $REPO_BRANCH $REPO_URL openwrt
+        ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
+
+    - name: Run Before-Update-Feeds Script
+      run: |
+        [ -e $FEEDS_CONF_DEFAULT ] && mv $FEEDS_CONF_DEFAULT openwrt/feeds.conf.default
+        chmod +x $CUSTOM_SCRIPT
+        cd openwrt
+        source $GITHUB_WORKSPACE/$CUSTOM_SCRIPT && Diy_Core && Diy-Part1
+
+    - name: Update & Install Feeds
+      run: |
+        cd openwrt
+        ./scripts/feeds update -a
+        ./scripts/feeds install -a
+
+    - name: Run After-Update-Feeds Script
+      run: |
+        [ -e $MAC80211 ] && mv $MAC80211 openwrt/package/kernel/mac80211/files/lib/wifi/mac80211.sh
+        [ -e $MWAN3 ] && mv $MWAN3 openwrt/package/feeds/packages/mwan3/files/etc/config/mwan3
+        [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
+        cd openwrt
+        source $GITHUB_WORKSPACE/$CUSTOM_SCRIPT && Diy_Core && Diy-Part2
+
+    - name: Download package
+      run: |
+        cd openwrt
+        make download -j$(nproc)
+        find dl -size -1024c -exec ls -l {} \;
+        find dl -size -1024c -exec rm -f {} \;
+
+    - name: Compile the firmware
+      run: |
+        cd openwrt
+        make -j$(nproc) V=s
+
+    - name: Run After-Compile-OpenWRT Script
+      run: |
+        cd openwrt
+        source $GITHUB_WORKSPACE/$CUSTOM_SCRIPT && Diy_Core && Diy-Part3
+
+    - name: Upload Firmware to Artifact
+      uses: actions/upload-artifact@main
+      with:
+        name: OpenWrt
+        path: openwrt/bin/Firmware
