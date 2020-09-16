@@ -1,2 +1,4 @@
 # AutoBuild-Actions-BETA
-使用 GitHub Actions 云编译 OpenWRT | 测试版
+Actions for Building OpenWRT
+
+Supported Devices: `d-team_newifi-d2`
