@@ -5,11 +5,9 @@
 
 Diy_Core() {
 Author=Hyy2001
-Github=https://github.com/Hyy2001X
 Default_File=./package/lean/default-settings/files/zzz-default-settings
 FIRMWARE_SUFFIX=squashfs-sysupgrade.bin
-
-Version=`egrep -o "R[0-9]+\.[0-9]+\.[0-9]+" $Default_File`
+Lede_Version=`egrep -o "R[0-9]+\.[0-9]+\.[0-9]+" $Default_File`
 Compile_Date=`date +'%Y/%m/%d'`
 Compile_Time=`date +'%Y-%m-%d %H:%M:%S'`
 }
@@ -35,8 +33,6 @@ do
 		echo "[$(date "+%H:%M:%S")] Package $2 detected!"
 		if [ $2 == OpenClash ];then
 			mv $2/luci-app-openclash ./package/lean
-		elif [ $2 == Openwrt-AutoUpdate ];then
-			mv $2/AutoUpdate.sh ./package/base-files/files/bin
 		else
 			mv $2 ./package/lean
 		fi
@@ -61,19 +57,19 @@ ExtraPackages git OpenClash https://github.com/vernesong master
 }
 
 Diy-Part2() {
-echo "[$(date "+%H:%M:%S")] Current Openwrt version: $Version-`date +%Y%m%d`"
+echo "[$(date "+%H:%M:%S")] Current Openwrt version: $Lede_Version-`date +%Y%m%d`"
 if [ ! $(grep -o "Compiled by $Author" $Default_File | wc -l) = "1" ];then
-	sed -i "s?$Version?$Version Compiled by $Author [$Compile_Date]?g" $Default_File
+	sed -i "s?$Lede_Version?$Lede_Version Compiled by $Author [$Compile_Date]?g" $Default_File
 fi
-echo "$Version-`date +%Y%m%d`" > ./package/base-files/files/etc/openwrt_date
-echo "[$(date "+%H:%M:%S")] Writing $Version-`date +%Y%m%d` to ./package/base-files/files/etc/openwrt_date ..."
+echo "$Lede_Version-`date +%Y%m%d`" > ./package/base-files/files/etc/openwrt_date
+echo "[$(date "+%H:%M:%S")] Writing $Lede_Version-`date +%Y%m%d` to ./package/base-files/files/etc/openwrt_date ..."
 }
 
 Diy-Part3() {
 GET_TARGET_INFO
 Default_Firmware=openwrt-$TARGET_BOARD-$TARGET_SUBTARGET-$TARGET_PROFILE-$FIRMWARE_SUFFIX
-AutoBuild_Firmware=AutoBuild-$TARGET_PROFILE-Lede-$Version`(date +-%Y%m%d.bin)`
-AutoBuild_Detail=AutoBuild-$TARGET_PROFILE-Lede-$Version`(date +-%Y%m%d.detail)`
+AutoBuild_Firmware=AutoBuild-$TARGET_PROFILE-Lede-$Lede_Version`(date +-%Y%m%d.bin)`
+AutoBuild_Detail=AutoBuild-$TARGET_PROFILE-Lede-$Lede_Version`(date +-%Y%m%d.detail)`
 mkdir -p ./bin/Firmware
 mv ./bin/targets/$TARGET_BOARD/$TARGET_SUBTARGET/$Default_Firmware ./bin/Firmware/$AutoBuild_Firmware
 cd ./bin/Firmware
