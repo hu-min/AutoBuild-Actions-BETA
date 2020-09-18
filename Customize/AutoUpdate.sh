@@ -2,22 +2,24 @@
 # AutoBuild Script Module by Hyy2001
 # AutoUpdate
 
-Version=V2.0
-Updated=2020.09.09
+Author=Hyy2001
+Version=V2.3
+Updated=2020.09.16
 
 Github=https://github.com/Hyy2001X/Openwrt-AutoUpdate
 Github_Release=$Github/releases/tag/AutoUpdate
 Github_Download=$Github/releases/download/AutoUpdate
+TARGET_PROFILE=d-team_newifi-d2
 
 clear
 if [ ! -f /etc/openwrt_date ];then
 	echo "AutoUpdate 不兼容当前固件!"
 	exit
 fi
-echo -e "Auto-Update Script $Version by Hyy2001\n"
+echo -e "Auto-Update Script $Version by $Author\n"
 CURRENT_VERSION=`cat /etc/openwrt_date`
 if [ "$CURRENT_VERSION" == "" ]; then
-	echo -e "警告:当前固件信息获取失败!\n"
+	echo -e "警告:当前固件版本获取失败!\n"
 	CURRENT_VERSION=未知
 fi
 cd /tmp
@@ -40,30 +42,31 @@ if [ $CURRENT_VERSION == $GET_Version ];then
 	Y)
 		echo -e "\n开始强制更新固件...\n"
 	;;
-	N)
-		exit
+	y)
+		echo -e "\n开始强制更新固件...\n"
 	;;
 	*)
-		echo -e "\n选择错误,请重试!"
+		echo -e "\n用户已取消强制更新,即将退出更新程序..."
+		sleep 2
 		exit
 	esac
 fi
-Firmware_Info=AutoBuild-d-team_newifi-d2-Lede-$GET_Version
+Firmware_Info=AutoBuild-$TARGET_PROFILE-Lede-$GET_Version
 Firmware=${Firmware_Info}.bin
 Firmware_Detail=${Firmware_Info}.detail
 echo "云端固件名称:$Firmware"
-echo -e "\n正在下载云端固件..."
+echo -e "\n正在下载固件..."
 wget --no-check-certificate -q $Github_Download/$Firmware -O $Firmware
 if [ ! "$?" == 0 ]; then
 	echo "...下载失败,请重试!"
 	exit
 fi
-echo "...下载成功!"
+echo "...固件下载成功!"
 echo "固件大小:$(du -h $Firmware | awk '{print $1}')"
 echo -e "\n正在下载固件详细信息..."
 wget --no-check-certificate -q $Github_Download/$Firmware_Detail -O $Firmware_Detail
 if [ ! "$?" == 0 ]; then
-	echo "...下载失败,请重试!"
+	echo "...下载失败,请检查网络后重试!"
 	exit
 fi
 echo "...下载成功!"
@@ -76,7 +79,7 @@ if [ "$GET_MD5" == "" ] || [ "$CURRENT_MD5" == "" ];then
 	exit
 fi
 if [ ! "$GET_MD5" == "$CURRENT_MD5" ];then
-	echo "MD5对比失败,请重新下载固件!"
+	echo "MD5对比不通过,请检查网络后重试!"
 	exit
 fi
 echo "MD5对比通过,准备升级固件..."
