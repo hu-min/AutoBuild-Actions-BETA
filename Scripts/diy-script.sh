@@ -6,16 +6,18 @@
 Diy_Core() {
 Author=Hyy2001
 Github=https://github.com/Hyy2001X
-AutoUpdate_Github=https://github.com/Hyy2001X/Openwrt-AutoUpdate
 Default_File=./package/lean/default-settings/files/zzz-default-settings
-TARGET_BOARD=ramips
-TARGET_SUBTARGET=mt7621
-TARGET_PROFILE=d-team_newifi-d2
-TARGET_ROOTFS=squashfs-sysupgrade.bin
+FIRMWARE_SUFFIX=squashfs-sysupgrade.bin
 
 Version=`egrep -o "R[0-9]+\.[0-9]+\.[0-9]+" $Default_File`
 Compile_Date=`date +'%Y/%m/%d'`
 Compile_Time=`date +'%Y-%m-%d %H:%M:%S'`
+}
+
+GET_TARGET_INFO() {
+TARGET_BOARD=`awk -F'[="]+' '/TARGET_BOARD/{print $2}' .config`
+TARGET_SUBTARGET=`awk -F'[="]+' '/TARGET_SUBTARGET/{print $2}' .config`
+TARGET_PROFILE=`grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/'`
 }
 
 ExtraPackages() {
@@ -56,7 +58,6 @@ ExtraPackages svn luci-app-adguardhome https://github.com/Lienol/openwrt/trunk/p
 ExtraPackages svn luci-app-smartdns https://github.com/project-openwrt/openwrt/trunk/package/ntlf9t
 ExtraPackages svn smartdns https://github.com/project-openwrt/openwrt/trunk/package/ntlf9t
 ExtraPackages git OpenClash https://github.com/vernesong master
-ExtraPackages git Openwrt-AutoUpdate https://github.com/Hyy2001X master
 }
 
 Diy-Part2() {
@@ -69,7 +70,8 @@ echo "[$(date "+%H:%M:%S")] Writing $Version-`date +%Y%m%d` to ./package/base-fi
 }
 
 Diy-Part3() {
-Default_Firmware=openwrt-$TARGET_BOARD-$TARGET_SUBTARGET-$TARGET_PROFILE-$TARGET_ROOTFS
+GET_TARGET_INFO
+Default_Firmware=openwrt-$TARGET_BOARD-$TARGET_SUBTARGET-$TARGET_PROFILE-$FIRMWARE_SUFFIX
 AutoBuild_Firmware=AutoBuild-$TARGET_PROFILE-Lede-$Version`(date +-%Y%m%d.bin)`
 AutoBuild_Detail=AutoBuild-$TARGET_PROFILE-Lede-$Version`(date +-%Y%m%d.detail)`
 mkdir -p ./bin/Firmware
