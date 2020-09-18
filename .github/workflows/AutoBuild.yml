@@ -28,9 +28,11 @@ env:
   CONFIG_FILE: .config
   FEEDS_CONF_DEFAULT: ./Customize/feeds.conf.default
   MAC80211: ./Customize/mac80211.sh
+  AUTOUPDATE: ./Customize/AutoUpdate.sh
   MWAN3: ./Customize/mwan3
   CUSTOM_SCRIPT: ./Scripts/diy-script.sh
   TZ: Asia/Shanghai
+  UPLOAD_RELEASE: true
 
 jobs:
   build:
@@ -67,8 +69,9 @@ jobs:
 
     - name: Run After-Update-Feeds Script
       run: |
-        [ -e $MAC80211 ] && mv $MAC80211 openwrt/package/kernel/mac80211/files/lib/wifi/mac80211.sh
-        [ -e $MWAN3 ] && mv $MWAN3 openwrt/package/feeds/packages/mwan3/files/etc/config/mwan3
+        [ -e $MAC80211 ] && mv $MAC80211 openwrt/package/kernel/mac80211/files/lib/wifi/$MAC80211
+        [ -e $MWAN3 ] && mv $MWAN3 openwrt/package/feeds/packages/mwan3/files/etc/config/$MWAN3
+        [ -e $AUTOUPDATE ] && mv $AUTOUPDATE openwrt/package/feeds/packages/base-files/files/bin/$AUTOUPDATE
         [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
         cd openwrt
         source $GITHUB_WORKSPACE/$CUSTOM_SCRIPT && Diy_Core && Diy-Part2
@@ -76,6 +79,7 @@ jobs:
     - name: Download package
       run: |
         cd openwrt
+        make defconfig
         make download -j$(nproc)
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
@@ -89,9 +93,19 @@ jobs:
       run: |
         cd openwrt
         source $GITHUB_WORKSPACE/$CUSTOM_SCRIPT && Diy_Core && Diy-Part3
+        echo "::set-env name=FIRMWARE::/bin/Firmware"
 
     - name: Upload Firmware to Artifact
       uses: actions/upload-artifact@main
       with:
         name: OpenWrt
         path: openwrt/bin/Firmware
+        
+    - name: Upload Firmware to Github Release
+      if: env.UPLOAD_RELEASE == 'true' && !cancelled()
+      uses: softprops/action-gh-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+      with:
+        tag_name: "AutoUpdate"
+        files: ${{ env.FIRMWARE }}/*
