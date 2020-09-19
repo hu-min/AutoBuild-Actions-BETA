@@ -32,6 +32,7 @@ env:
   MWAN3: ./Customize/mwan3
   CUSTOM_SCRIPT: ./Scripts/diy-script.sh
   TZ: Asia/Shanghai
+  UPLOAD_RELEASE: true
 
 jobs:
   build:
@@ -98,20 +99,21 @@ jobs:
       with:
         name: OpenWrt
         path: openwrt/bin/Firmware
-        
-    - name: Organize files
-      id: organize
-      run: |
-        echo " - $(date +"%Y%m%d")-AutoUpdate" > release.txt
-        cd openwrt/bin/Firmware/*
-        echo "::set-env name=FIRMWARE::$PWD"
 
-    - name: Upload firmware to release
+    - name: Generate Tag
+      id: tag
+      if: env.UPLOAD_RELEASE == 'true' && !cancelled()
+      run: |
+        echo " - $(date +"%Y%m%d")-AutoUpdate" > update_log.txt
+        echo "::set-env name=FIRMWARE::openwrt/bin/Firmware"
+        echo "::set-output name=status::success"
+
+    - name: Upload Firmware to Github Release
       uses: softprops/action-gh-release@v1
       if: steps.tag.outputs.status == 'success' && !cancelled()
       env:
         GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
       with:
-        tag_name: "AutoUpdate"
-        body_path: release.txt
+        tag_name: AutoUpdate
+        body_path: update_log.txt
         files: ${{ env.FIRMWARE }}/*
