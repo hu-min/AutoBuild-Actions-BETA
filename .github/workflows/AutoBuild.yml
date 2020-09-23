@@ -87,7 +87,7 @@ jobs:
     - name: Compile the Firmware
       run: |
         cd openwrt
-        make -j$(nproc) V=s
+        make -j1 V=s
 
     - name: Run After-Compile-OpenWRT Script
       run: |
