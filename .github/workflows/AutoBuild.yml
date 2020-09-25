@@ -123,3 +123,9 @@ jobs:
         tag_name: AutoUpdate
         body_path: update_log.txt
         files: ${{ env.FIRMWARE }}/*
+
+    - name: Remove Old Artifacts
+      uses: c-hive/gha-remove-artifacts@v1
+      with:
+        age: '1 day'
+        skip-recent: 3
