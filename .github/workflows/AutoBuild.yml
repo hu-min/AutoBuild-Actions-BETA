@@ -3,7 +3,7 @@
 # Github: https://github.com/Hyy2001X/AutoBuild-Actions
 # Lisence: MIT
 # Author: P3TERX
-# Modify: Hyy2001
+# Modify: Hyy2001X
 #=======================================================
 
 name: AutoBuild OpenWrt
@@ -27,12 +27,11 @@ env:
   REPO_BRANCH: master
   CONFIG_FILE: .config
   FEEDS_CONF_DEFAULT: ./Customize/feeds.conf.default
-  MAC80211: ./Customize/mac80211.sh
-  AUTOUPDATE: ./Customize/AutoUpdate.sh
-  MWAN3: ./Customize/mwan3
   CUSTOM_SCRIPT: ./Scripts/diy-script.sh
   TZ: Asia/Shanghai
   UPLOAD_RELEASE: true
+  UPLOAD_FIRMWARE: true
+  UPLOAD_BIN_DIR: false
 
 jobs:
   build:
@@ -59,7 +58,7 @@ jobs:
         [ -e $FEEDS_CONF_DEFAULT ] && mv $FEEDS_CONF_DEFAULT openwrt/feeds.conf.default
         chmod +x $CUSTOM_SCRIPT
         cd openwrt
-        source $GITHUB_WORKSPACE/$CUSTOM_SCRIPT && Diy_Core && Diy-Part1
+        source $GITHUB_WORKSPACE/$CUSTOM_SCRIPT && Diy-Part1
 
     - name: Update & Install Feeds
       run: |
@@ -69,9 +68,6 @@ jobs:
 
     - name: Run After-Update-Feeds Script
       run: |
-        [ -e $MAC80211 ] && mv $MAC80211 openwrt/package/kernel/mac80211/files/lib/wifi/mac80211.sh
-        [ -e $MWAN3 ] && mv $MWAN3 openwrt/package/feeds/packages/mwan3/files/etc/config/mwan3
-        [ -e $AUTOUPDATE ] && mv $AUTOUPDATE openwrt/package/base-files/files/bin/AutoUpdate.sh
         [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
         cd openwrt
         source $GITHUB_WORKSPACE/$CUSTOM_SCRIPT && Diy_Core && Diy-Part2
@@ -87,7 +83,7 @@ jobs:
     - name: Compile the Firmware
       run: |
         cd openwrt
-        make -j1 V=s
+        make -j$(nproc) V=s
 
     - name: Run After-Compile-OpenWRT Script
       run: |
@@ -96,9 +92,17 @@ jobs:
 
     - name: Upload Firmware to Artifacts
       uses: actions/upload-artifact@main
+      if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
       with:
-        name: OpenWrt
+        name: OpenWrt_Firmware
         path: openwrt/bin/Firmware
+        
+    - name: Upload Firmware Directory to Artifacts
+      uses: actions/upload-artifact@main
+      if: env.UPLOAD_BIN_DIR == 'true' && !cancelled()
+      with:
+        name: OpenWrt_Bin
+        path: openwrt/bin
 
     - name: Generate Tag
       id: tag
