@@ -47,11 +47,9 @@ done
 }
 
 Diy-Part1() {
-ls $GITHUB_WORKSPACE
-cd .. && pwd && ls
-mv /workdir/Customize/mac80211.sh ./package/kernel/mac80211/files/lib/wifi/mac80211.sh
-mv /workdir/Customize/AutoUpdate.sh ./package/base-files/files/bin/AutoUpdate.sh
-mv /workdir/Customize/system ./package/base-files/files/etc/config/system
+mv $GITHUB_WORKSPACE/Customize/mac80211.sh ./package/kernel/mac80211/files/lib/wifi/mac80211.sh
+mv $GITHUB_WORKSPACE/Customize/AutoUpdate.sh ./package/base-files/files/bin/AutoUpdate.sh
+mv $GITHUB_WORKSPACE/Customize/system ./package/base-files/files/etc/config/system
 #mv ../Customize/mwan3 ./package/feeds/packages/mwan3/files/etc/config/mwan3
 sed -i "s/#src-git helloworld/src-git helloworld/g" feeds.conf.default
 [ ! -d ./package/lean ] && mkdir ./package/lean
