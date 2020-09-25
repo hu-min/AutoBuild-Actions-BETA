@@ -48,10 +48,8 @@ done
 
 Diy-Part1() {
 mkdir -p ./package/base-files/files/etc/config
-pwd
-ls $GITHUB_WORKSPACE
-[ -e $GITHUB_WORKSPACE/Customize/mac80211.sh ] && mv $MAC80211 ./package/kernel/mac80211/files/lib/wifi/mac80211.sh
-[ -e $GITHUB_WORKSPACE/Customize/system ] && mv $SYSTEM ./package/base-files/files/etc/config/system
+mv $GITHUB_WORKSPACE/Customize/mac80211.sh ./package/kernel/mac80211/files/lib/wifi/mac80211.sh
+mv $GITHUB_WORKSPACE/Customize/system ./package/base-files/files/etc/config/system
 
 sed -i "s/#src-git helloworld/src-git helloworld/g" feeds.conf.default
 [ ! -d ./package/lean ] && mkdir ./package/lean
