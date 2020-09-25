@@ -48,7 +48,7 @@ done
 
 mv2() {
 if [ -f $GITHUB_WORKSPACE/Customize/$1 ];then
-	[ ! -d $2 ] && mkir ./$2
+	[ ! -d $2 ] && mkdir ./$2
 	echo "[$(date "+%H:%M:%S")] Moving Customize/$1 to $2 ..."
 	mv -f $GITHUB_WORKSPACE/Customize/$1 ./$2/$1
 else
