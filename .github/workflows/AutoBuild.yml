@@ -28,11 +28,8 @@ env:
   REPO_URL: https://github.com/coolsnowwolf/lede
   REPO_BRANCH: master
   CONFIG_FILE: .config
-  FEEDS_CONF_DEFAULT: ./Customize/feeds.conf.default
+  FEEDS_CONF_DEFAULT: feeds.conf.default
   CUSTOM_SCRIPT: ./Scripts/diy-script.sh
-  AUTOUPDATE: ./Customize/AutoUpdate.sh
-#  MAC80211: ./Customize/mac80211.sh
-#  SYSTEM: ./Customize/system
   TZ: Asia/Shanghai
   UPLOAD_RELEASE: true
   UPLOAD_FIRMWARE: true
