@@ -31,8 +31,8 @@ env:
   FEEDS_CONF_DEFAULT: ./Customize/feeds.conf.default
   CUSTOM_SCRIPT: ./Scripts/diy-script.sh
   AUTOUPDATE: ./Customize/AutoUpdate.sh
-  MAC80211: ./Customize/mac80211.sh
-  SYSTEM: ./Customize/system
+#  MAC80211: ./Customize/mac80211.sh
+#  SYSTEM: ./Customize/system
   TZ: Asia/Shanghai
   UPLOAD_RELEASE: true
   UPLOAD_FIRMWARE: true
@@ -50,8 +50,8 @@ jobs:
       env:
         DEBIAN_FRONTEND: noninteractive
       run: |
-        sudo -E apt-get update
-        sudo -E apt-get git
+        sudo -E apt-get -qq update
+        sudo -E apt-get -qq install git
 
     - name: Clone Openwrt source code
       run: |
@@ -75,10 +75,7 @@ jobs:
       run: |
         pwd
         [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
-        [ -e $MAC80211 ] && mv $MAC80211 openwrt/package/kernel/mac80211/files/lib/wifi/mac80211.sh
         [ -e $AUTOUPDATE ] && mv $AUTOUPDATE openwrt/package/base-files/files/bin/AutoUpdate.sh
-        mkdir -p openwrt/package/base-files/files/etc/config
-        [ -e $SYSTEM ] && mv $SYSTEM openwrt/package/base-files/files/etc/config/system
         cd openwrt
         source $GITHUB_WORKSPACE/$CUSTOM_SCRIPT && Diy_Core && Diy-Part2
 
