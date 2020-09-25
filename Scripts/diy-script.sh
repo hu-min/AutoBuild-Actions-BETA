@@ -57,11 +57,13 @@ fi
 }
 
 Diy-Part1() {
+sed -i "s/#src-git helloworld/src-git helloworld/g" feeds.conf.default
+[ ! -d ./package/lean ] && mkdir ./package/lean
+
 mv2 mac80211.sh package/kernel/mac80211/files/lib/wifi
 mv2 system package/base-files/files/etc/config/system
 mv2 AutoUpdate.sh package/base-files/files/bin
-sed -i "s/#src-git helloworld/src-git helloworld/g" feeds.conf.default
-[ ! -d ./package/lean ] && mkdir ./package/lean
+
 ExtraPackages git luci-theme-argon https://github.com/jerrykuku 18.06
 ExtraPackages svn luci-app-adguardhome https://github.com/Lienol/openwrt/trunk/package/diy
 ExtraPackages svn luci-app-smartdns https://github.com/project-openwrt/openwrt/trunk/package/ntlf9t
