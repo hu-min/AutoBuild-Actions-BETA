@@ -46,11 +46,14 @@ do
 done
 }
 
-Diy-Part1() {
-mkdir -p ./package/base-files/files/etc/config
-mv $GITHUB_WORKSPACE/Customize/mac80211.sh ./package/kernel/mac80211/files/lib/wifi/mac80211.sh
-mv $GITHUB_WORKSPACE/Customize/system ./package/base-files/files/etc/config/system
+mv2() {
+[ ! ./$2 ] && mkir ./$2
+mv -f $GITHUB_WORKSPACE/Customize/$1 ./$2/$1
+}
 
+Diy-Part1() {
+mv2 mac80211.sh package/kernel/mac80211/files/lib/wifi
+mv2 system package/base-files/files/etc/config/system
 sed -i "s/#src-git helloworld/src-git helloworld/g" feeds.conf.default
 [ ! -d ./package/lean ] && mkdir ./package/lean
 ExtraPackages git luci-theme-argon https://github.com/jerrykuku 18.06
