@@ -10,7 +10,7 @@ Default_File=./package/lean/default-settings/files/zzz-default-settings
 Lede_Version=`egrep -o "R[0-9]+\.[0-9]+\.[0-9]+" $Default_File`
 Compile_Date=`date +'%Y/%m/%d'`
 Compile_Time=`date +'%Y-%m-%d %H:%M:%S'`
-TARGET_PROFILE=`grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/'`
+TARGET_PROFILE=`egrep -o "CONFIG_TARGET.*DEVICE.*=y" .config | sed -r 's/.*DEVICE_(.*)=y/\1/'`
 }
 
 GET_TARGET_INFO() {
@@ -52,6 +52,7 @@ if [ -f $GITHUB_WORKSPACE/Customize/$1 ];then
 		echo "[$(date "+%H:%M:%S")] Creating new folder $2 ..."
 		mkdir ./$2
 	fi
+	[ -f ./$2/$1 ] && rm -f ./$2/$1
 	echo "[$(date "+%H:%M:%S")] Moving Customize/$1 to $2 ..."
 	mv -f $GITHUB_WORKSPACE/Customize/$1 ./$2/$1
 else
@@ -66,6 +67,7 @@ sed -i "s/#src-git helloworld/src-git helloworld/g" feeds.conf.default
 mv2 mac80211.sh package/kernel/mac80211/files/lib/wifi
 mv2 system package/base-files/files/etc/config
 mv2 AutoUpdate.sh package/base-files/files/bin
+mv2 firewall.config package/network/config/firewall/files
 
 ExtraPackages git luci-theme-argon https://github.com/jerrykuku 18.06
 ExtraPackages svn luci-app-adguardhome https://github.com/Lienol/openwrt/trunk/package/diy
@@ -81,9 +83,7 @@ echo "Author: $Author"
 echo "Current Openwrt version: $Lede_Version-`date +%Y%m%d`"
 echo "Current Device: $TARGET_PROFILE"
 sed -i "s?$Lede_Version?$Lede_Version Compiled by $Author [$Compile_Date]?g" $Default_File
-echo "$Author" > ./package/base-files/files/etc/openwrt_author
-echo "$Lede_Version-`date +%Y%m%d`" > ./package/base-files/files/etc/openwrt_date
-echo "$TARGET_PROFILE" > ./package/base-files/files/etc/openwrt_device
+echo "$Lede_Version-`date +%Y%m%d`" > ./package/base-files/files/etc/openwrt_info
 }
 
 Diy-Part3() {
