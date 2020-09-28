@@ -4,7 +4,7 @@
 # AutoUpdate
 
 Version=V3.2-b
-DEFAULT_DEVICE=d-team_newifi-d2
+DEFAULT_DEVICE=phicomm_k2p
 Github=https://github.com/Hyy2001X/AutoBuild-Actions
 
 function TIME() {
