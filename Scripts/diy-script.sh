@@ -87,6 +87,7 @@ echo "$Lede_Version-`date +%Y%m%d`" > ./package/base-files/files/etc/openwrt_inf
 }
 
 Diy-Part3() {
+ls ./bin/$TARGET_BOARD/$TARGET_SUBTARGET
 GET_TARGET_INFO
 Default_Firmware=openwrt-$TARGET_BOARD-$TARGET_SUBTARGET-$TARGET_PROFILE-squashfs-sysupgrade.bin
 AutoBuild_Firmware=AutoBuild-$TARGET_PROFILE-Lede-$Lede_Version`(date +-%Y%m%d.bin)`
