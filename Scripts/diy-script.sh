@@ -66,6 +66,7 @@ sed -i "s/#src-git helloworld/src-git helloworld/g" feeds.conf.default
 
 mv2 mac80211.sh package/kernel/mac80211/files/lib/wifi
 mv2 system package/base-files/files/etc/config
+mv2 mwan3 package/base-files/files/etc/config
 mv2 AutoUpdate.sh package/base-files/files/bin
 mv2 firewall.config package/network/config/firewall/files
 
@@ -87,7 +88,6 @@ echo "$Lede_Version-`date +%Y%m%d`" > ./package/base-files/files/etc/openwrt_inf
 }
 
 Diy-Part3() {
-ls ./bin/$TARGET_BOARD/$TARGET_SUBTARGET
 GET_TARGET_INFO
 Default_Firmware=openwrt-$TARGET_BOARD-$TARGET_SUBTARGET-$TARGET_PROFILE-squashfs-sysupgrade.bin
 AutoBuild_Firmware=AutoBuild-$TARGET_PROFILE-Lede-$Lede_Version`(date +-%Y%m%d.bin)`
