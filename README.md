@@ -24,4 +24,4 @@ Supported Devices: `d-team_newifi-d2`
 
 3. 编辑`/Sctipts/diy-script.sh`文件,修改`第 7 行`为作者,作者将在路由器后台显示`Compiled by Hyy2001`
 
-4. 添加额外的软件包,编辑`Scrips/diy-script.sh`中的`Diy-Part1()`函数，参照现有 ExtraPackages 语法添加第三方包
+4. 添加额外的软件包,编辑`Scrips/diy-script.sh`中的`Diy-Part1()`函数,参照现有 ExtraPackages 语法添加第三方包到源码
