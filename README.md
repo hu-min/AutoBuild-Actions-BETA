@@ -18,10 +18,12 @@ ___
 客制化固件:
 ------
 
-*1. 进入到你的`AutoBuild-Actions`仓库
+1. 进入到你的`AutoBuild-Actions`仓库
 
-*2. 编辑`/Customize/AutoUpdate.sh`文件,修改`第 7 行`为你要编译的设备名称,修改`第 8 行`为你的 Github 地址
+2. 编辑`/Customize/AutoUpdate.sh`文件,修改`第 7 行`为你要编译的设备名称,修改`第 8 行`为你的 Github 地址
 
-*3. 编辑`/Sctipts/diy-script.sh`文件,修改`第 7 行`为作者,作者将在路由器后台显示`Compiled by Hyy2001`
+3. 编辑`/Sctipts/diy-script.sh`文件,修改`第 7 行`为作者,作者将在路由器后台显示`Compiled by Hyy2001`
 
-4. 添加额外的软件包,编辑`Scrips/diy-script.sh`中的`Diy-Part1()`函数,参照现有 ExtraPackages 语法添加第三方包到源码
+4. 添加额外的软件包: 编辑`Scrips/diy-script.sh`中的`Diy-Part1()`函数,参照现有 `ExtraPackages` 语法添加第三方包到源码
+
+5. 添加自定义文件: 编辑`Scrips/diy-script.sh`中的`Diy-Part1()`函数,参照现有 `mv2` 语法添加文件到源码
