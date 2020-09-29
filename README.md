@@ -2,7 +2,7 @@
 
 Actions for Building OpenWRT
 
-测试通过的设备: **!x86** `d-team_newifi-d2` `phicomm_k2p`
+测试通过的设备: **!x86**、`d-team_newifi-d2`、`phicomm_k2p`
 
 使用方法/Usage:
 ------
