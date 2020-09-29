@@ -2,14 +2,14 @@
 
 Actions for Building OpenWRT
 
-Supported Devices: `d-team_newifi-d2`
+测试通过的设备: **d-team_newifi-d2**
 ___
 使用方法/Usage:
 ------
 
 1. 首先需要获取[Github Token](https://github.com/settings/tokens/new),`Note`项随意填写,`Select scopes`项如果不懂就全部打勾,完成后点击`Generate token`
 
-2. 复制获取到的Token值,一定要保存到本地,Token值只会显示一次!
+2. 复制获取到的Token值,**一定要保存到本地,Token值只会显示一次!**
 
 3. `Fork`此仓库,然后进入到你的`AutoBuild-Actions`仓库
 
@@ -24,6 +24,6 @@ ___
 
 3. 编辑`/Sctipts/diy-script.sh`文件,修改`第 7 行`为作者,作者将在路由器后台显示`Compiled by Hyy2001`
 
-4. 添加额外的软件包: 编辑`Scrips/diy-script.sh`中的`Diy-Part1()`函数,参照现有 `ExtraPackages` 语法添加第三方包到源码
+4. 添加额外的软件包: 编辑`Scrips/diy-script.sh`中的 `Diy-Part1()` 函数,参照现有 `ExtraPackages` 语法添加第三方包到源码
 
-5. 添加自定义文件: 编辑`Scrips/diy-script.sh`中的`Diy-Part1()`函数,参照现有 `mv2` 语法添加文件到源码
+5. 添加自定义文件: 编辑`Scrips/diy-script.sh`中的 `Diy-Part1()` 函数,参照现有 `mv2` 语法添加文件到源码
