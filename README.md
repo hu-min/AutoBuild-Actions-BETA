@@ -25,9 +25,10 @@ ___
 3. 编辑`/Sctipts/diy-script.sh`文件,修改`第 7 行`为作者,作者将在路由器后台显示`Compiled by Hyy2001`
 
 4. 添加额外的软件包: 编辑`Scrips/diy-script.sh`中的 `Diy-Part1()` 函数,参照现有 `ExtraPackages` 语法添加第三方包到源码
-
-    ExtraPackages git(即为git clone) Github仓库 远程分支
+```
+    [git clone]     ExtraPackages git Github仓库 远程分支
     
-    ExtraPackages svn(即为svn checkout) Github仓库/trunk
+    [svn checkout]  ExtraPackages svn Github仓库/trunk
+```
 
 5. 添加自定义文件: 编辑`Scrips/diy-script.sh`中的 `Diy-Part1()` 函数,参照现有 `mv2` 语法添加文件到源码
