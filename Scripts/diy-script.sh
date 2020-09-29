@@ -10,7 +10,7 @@ Default_File=./package/lean/default-settings/files/zzz-default-settings
 Lede_Version=`egrep -o "R[0-9]+\.[0-9]+\.[0-9]+" $Default_File`
 Compile_Date=`date +'%Y/%m/%d'`
 Compile_Time=`date +'%Y-%m-%d %H:%M:%S'`
-TARGET_PROFILE=`egrep -o "CONFIG_TARGET.*DEVICE.*=y" .config | sed -r 's/.*DEVICE_(.*)=y/\1/'`
+TARGET_PROFILE=`grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/' | awk 'NR==1'`
 }
 
 GET_TARGET_INFO() {
@@ -66,9 +66,9 @@ sed -i "s/#src-git helloworld/src-git helloworld/g" feeds.conf.default
 
 mv2 mac80211.sh package/kernel/mac80211/files/lib/wifi
 mv2 system package/base-files/files/etc/config
-mv2 mwan3 package/base-files/files/etc/config
 mv2 AutoUpdate.sh package/base-files/files/bin
 mv2 firewall.config package/network/config/firewall/files
+mv2 banner package/base-files/files/etc
 
 ExtraPackages git luci-theme-argon https://github.com/jerrykuku 18.06
 ExtraPackages svn luci-app-adguardhome https://github.com/Lienol/openwrt/trunk/package/diy
@@ -81,10 +81,11 @@ ExtraPackages svn luci-app-socat https://github.com/xiaorouji/openwrt-package/tr
 
 Diy-Part2() {
 echo "Author: $Author"
-echo "Current Openwrt version: $Lede_Version-`date +%Y%m%d`"
+echo "Current Openwrt Version: $Lede_Version-`date +%Y%m%d`"
 echo "Current Device: $TARGET_PROFILE"
 sed -i "s?$Lede_Version?$Lede_Version Compiled by $Author [$Compile_Date]?g" $Default_File
 echo "$Lede_Version-`date +%Y%m%d`" > ./package/base-files/files/etc/openwrt_info
+sed -i "s?Openwrt?Openwrt $Lede_Version-`date +%Y%m%d` / AutoUpdate $(awk 'NR==6' ./package/base-files/files/bin/AutoUpdate.sh | awk -F'[="]+' '/Version/{print $2}')?g" ./package/base-files/files/etc/banner
 }
 
 Diy-Part3() {
