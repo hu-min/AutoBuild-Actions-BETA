@@ -31,4 +31,4 @@ ___
    [svn checkout]  ExtraPackages svn Github仓库/trunk
 ```
 
-5. 添加自定义文件: 编辑`Scrips/diy-script.sh`中的 `Diy-Part1()` 函数,参照现有 `mv2` 语法添加文件到源码
+5. 添加自定义文件: 首先添加文件到`/Customize`,编辑 `Diy-Part1()` 函数,参照下方语法添加自定义文件到源码
