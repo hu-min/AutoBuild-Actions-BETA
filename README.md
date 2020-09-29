@@ -3,8 +3,7 @@
 Actions for Building OpenWRT
 
 Supported Devices: `d-team_newifi-d2`
-
-***
+___
 使用方法/Usage:
 ------
 
@@ -14,7 +13,7 @@ Supported Devices: `d-team_newifi-d2`
 
 3. `Fork`此仓库,然后进入到你的`AutoBuild-Actions`仓库
 
-4. 点击右上方菜单中的`Settings`,点击`Secrets`-`New Secrets`,`Name`项填写`RELEASE_TOKEN`,`Value`项填写你在第 1 步中获取到的token
+4. 点击右上方菜单中的`Settings`,点击`Secrets`-`New Secrets`,`Name`项填写`RELEASE_TOKEN`,`Value`项填写你在第 1 步中获取到的Token
 
 客制化固件:
 ------
@@ -25,4 +24,4 @@ Supported Devices: `d-team_newifi-d2`
 
 3. 编辑`/Sctipts/diy-script.sh`文件,修改`第 7 行`为作者,作者将在路由器后台显示`Compiled by Hyy2001`
 
-4. 添加额外的软件包,编辑`Scrips/diy-script.sh`中的`Diy-Part1()`函数,参照现有 ExtraPackages 语法添加第三方包到源码
+4. *添加额外的软件包,编辑`Scrips/diy-script.sh`中的`Diy-Part1()`函数,参照现有 ExtraPackages 语法添加第三方包到源码
