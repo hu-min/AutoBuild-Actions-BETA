@@ -8,6 +8,8 @@ Author=Hyy2001
 
 Default_File=./package/lean/default-settings/files/zzz-default-settings
 Lede_Version=`egrep -o "R[0-9]+\.[0-9]+\.[0-9]+" $Default_File`
+Openwrt_Version="$Lede_Version-`date +%Y%m%d`"
+AutoUpdate_Version=`awk 'NR==6' ./package/base-files/files/bin/AutoUpdate.sh | awk -F'[="]+' '/Version/{print $2}'`
 Compile_Date=`date +'%Y/%m/%d'`
 Compile_Time=`date +'%Y-%m-%d %H:%M:%S'`
 TARGET_PROFILE=`grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/' | awk 'NR==1'`
@@ -81,18 +83,19 @@ ExtraPackages svn luci-app-socat https://github.com/xiaorouji/openwrt-package/tr
 
 Diy-Part2() {
 echo "Author: $Author"
-echo "Current Openwrt Version: $Lede_Version-`date +%Y%m%d`"
+echo "Current Openwrt Version: $Openwrt_Version"
+echo "Current AutoUpdate Version: $AutoUpdate_Version"
 echo "Current Device: $TARGET_PROFILE"
 sed -i "s?$Lede_Version?$Lede_Version Compiled by $Author [$Compile_Date]?g" $Default_File
-echo "$Lede_Version-`date +%Y%m%d`" > ./package/base-files/files/etc/openwrt_info
-sed -i "s?Openwrt?Openwrt $Lede_Version-`date +%Y%m%d` / AutoUpdate $(awk 'NR==6' ./package/base-files/files/bin/AutoUpdate.sh | awk -F'[="]+' '/Version/{print $2}')?g" ./package/base-files/files/etc/banner
+echo "$Openwrt_Version" > ./package/base-files/files/etc/openwrt_info
+sed -i "s?Openwrt?Openwrt $Openwrt_Version / AutoUpdate $AutoUpdate_Version?g" ./package/base-files/files/etc/banner
 }
 
 Diy-Part3() {
 GET_TARGET_INFO
 Default_Firmware=openwrt-$TARGET_BOARD-$TARGET_SUBTARGET-$TARGET_PROFILE-squashfs-sysupgrade.bin
-AutoBuild_Firmware=AutoBuild-$TARGET_PROFILE-Lede-$Lede_Version`(date +-%Y%m%d.bin)`
-AutoBuild_Detail=AutoBuild-$TARGET_PROFILE-Lede-$Lede_Version`(date +-%Y%m%d.detail)`
+AutoBuild_Firmware=AutoBuild-$TARGET_PROFILE-Lede-${Openwrt_Version}.bin
+AutoBuild_Detail=AutoBuild-$TARGET_PROFILE-Lede-${Openwrt_Version}.detail
 mkdir -p ./bin/Firmware
 echo "[$(date "+%H:%M:%S")] Moving $Default_Firmware to /bin/Firmware/$AutoBuild_Firmware ..."
 mv ./bin/targets/$TARGET_BOARD/$TARGET_SUBTARGET/$Default_Firmware ./bin/Firmware/$AutoBuild_Firmware
