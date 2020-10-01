@@ -23,7 +23,7 @@ TARGET_SUBTARGET=`awk -F'[="]+' '/TARGET_SUBTARGET/{print $2}' .config`
 ExtraPackages() {
 [ -d ./package/lean/$2 ] && rm -rf ./package/lean/$2
 [ -d ./$2 ] && rm -rf ./$2
-Retry_Times=4
+Retry_Times=3
 while [ ! -f $2/Makefile ]
 do
 	echo "[$(date "+%H:%M:%S")] Checking out $2 from $3 ..."
@@ -32,7 +32,7 @@ do
 	else
 		svn checkout $3/$2 $2 > /dev/null 2>&1
 	fi
-	if [ -f $2/Makefile ] || [ -f $2/README ];then
+	if [ -f $2/Makefile1 ] || [ -f $2/README1 ];then
 		echo "[$(date "+%H:%M:%S")] Package $2 detected!"
 		case $2 in
 		OpenClash)
@@ -47,8 +47,8 @@ do
 		rm -rf ./$2 > /dev/null 2>&1
 		break
 	else
+		[ $Retry_Times -lt 1 ] && echo "[$(date "+%H:%M:%S")] Skip check out package $1 ..." && break
 		Retry_Times=$(($Retry_Times - 1))
-		[ $Retry_Times -lt 2 ] && break
 		echo "[$(date "+%H:%M:%S")] [$Retry_Times]Checkout failed,retry in 3s ..."
 		rm -rf ./$2 > /dev/null 2>&1
 		sleep 3
