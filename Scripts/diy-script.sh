@@ -32,7 +32,7 @@ do
 	else
 		svn checkout $3/$2 $2 > /dev/null 2>&1
 	fi
-	if [ -f $2/Makefile ] || [ -f $2/README ];then
+	if [ -f $2/Makefile ] || [ -f $2/README* ];then
 		echo "[$(date "+%H:%M:%S")] Package $2 detected!"
 		case $2 in
 		OpenClash)
@@ -84,7 +84,7 @@ mv2 banner package/base-files/files/etc
 ExtraPackages git luci-theme-argon https://github.com/jerrykuku 18.06
 #ExtraPackages svn luci-theme-opentomato https://github.com/kenzok8/openwrt-packages/trunk
 #ExtraPackages svn luci-theme-opentomcat https://github.com/kenzok8/openwrt-packages/trunk
-ExtraPackages svn luci-app-adguardhome https://github.com/Lienol/openwrt/trunk/package/diy
+#ExtraPackages svn luci-app-adguardhome https://github.com/Lienol/openwrt/trunk/package/diy
 ExtraPackages git luci-app-adguardhome https://github.com/Hyy2001X master
 ExtraPackages svn luci-app-smartdns https://github.com/project-openwrt/openwrt/trunk/package/ntlf9t
 ExtraPackages svn smartdns https://github.com/project-openwrt/openwrt/trunk/package/ntlf9t
