@@ -32,7 +32,7 @@ do
 	else
 		svn checkout $3/$2 $2 > /dev/null 2>&1
 	fi
-	if [ -f $2/Makefile1 ] || [ -f $2/README1 ];then
+	if [ -f $2/Makefile ] || [ -f $2/README ];then
 		echo "[$(date "+%H:%M:%S")] Package $2 detected!"
 		case $2 in
 		OpenClash)
