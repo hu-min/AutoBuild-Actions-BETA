@@ -23,6 +23,7 @@ TARGET_SUBTARGET=`awk -F'[="]+' '/TARGET_SUBTARGET/{print $2}' .config`
 ExtraPackages() {
 [ -d ./package/lean/$2 ] && rm -rf ./package/lean/$2
 [ -d ./$2 ] && rm -rf ./$2
+Retry_Times=3
 while [ ! -f $2/Makefile ]
 do
 	echo "[$(date "+%H:%M:%S")] Checking out $2 from $3 ..."
@@ -35,18 +36,20 @@ do
 		echo "[$(date "+%H:%M:%S")] Package $2 detected!"
 		case $2 in
 		OpenClash)
-			mv ./$2/luci-app-openclash ./package/lean
+			mv -f ./$2/luci-app-openclash ./package/lean
 		;;
 		openwrt-OpenAppFilter)
-			mv ./$2 ./package/lean
+			mv -f ./$2 ./package/lean
 		;;
 		*)
-			mv ./$2 ./package/lean
+			mv -f ./$2 ./package/lean
 		esac
 		rm -rf ./$2 > /dev/null 2>&1
 		break
 	else
-		echo "[$(date "+%H:%M:%S")] Checkout failed,retry in 3s."
+		Retry_Times=$(($Retry_Times - 1))
+		[ $Retry_Times -lt 0 ] && break
+		echo "[$(date "+%H:%M:%S")] [$Retry_Times]Checkout failed,retry in 3s."
 		rm -rf ./$2 > /dev/null 2>&1
 		sleep 3
 	fi
@@ -78,7 +81,7 @@ mv2 AutoUpdate.sh package/base-files/files/bin
 mv2 firewall.config package/network/config/firewall/files
 mv2 banner package/base-files/files/etc
 
-ExtraPackages git luci-theme-argon https://github.com/jerrykuku 18.06
+ExtraPackages git luci-theme-argon https://github.com/jerrykuku1 18.06
 #ExtraPackages svn luci-app-adguardhome https://github.com/Lienol/openwrt/trunk/package/diy
 ExtraPackages git luci-app-adguardhome https://github.com/Hyy2001X master
 ExtraPackages svn luci-app-smartdns https://github.com/project-openwrt/openwrt/trunk/package/ntlf9t
