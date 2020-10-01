@@ -82,21 +82,23 @@ mv2 firewall.config package/network/config/firewall/files
 mv2 banner package/base-files/files/etc
 
 ExtraPackages git luci-theme-argon https://github.com/jerrykuku 18.06
-#ExtraPackages svn luci-app-adguardhome https://github.com/Lienol/openwrt/trunk/package/diy
+#ExtraPackages svn luci-theme-opentomato https://github.com/kenzok8/openwrt-packages/trunk
+#ExtraPackages svn luci-theme-opentomcat https://github.com/kenzok8/openwrt-packages/trunk
+ExtraPackages svn luci-app-adguardhome https://github.com/Lienol/openwrt/trunk/package/diy
 ExtraPackages git luci-app-adguardhome https://github.com/Hyy2001X master
 ExtraPackages svn luci-app-smartdns https://github.com/project-openwrt/openwrt/trunk/package/ntlf9t
 ExtraPackages svn smartdns https://github.com/project-openwrt/openwrt/trunk/package/ntlf9t
 ExtraPackages git OpenClash https://github.com/vernesong master
-ExtraPackages git openwrt-OpenAppFilter https://github.com/Lienol master
+#ExtraPackages git openwrt-OpenAppFilter https://github.com/Lienol master
 ExtraPackages git luci-app-serverchan https://github.com/tty228 master
 ExtraPackages svn luci-app-socat https://github.com/xiaorouji/openwrt-package/trunk/lienol
 }
 
 Diy-Part2() {
 echo "Author: $Author"
-echo "Current Openwrt Version: $Openwrt_Version"
-echo "Current AutoUpdate Version: $AutoUpdate_Version"
-echo "Current Device: $TARGET_PROFILE"
+echo "Openwrt Version: $Openwrt_Version"
+echo "AutoUpdate Version: $AutoUpdate_Version"
+echo "Device: $TARGET_PROFILE"
 sed -i "s?$Lede_Version?$Lede_Version Compiled by $Author [$Compile_Date]?g" $Default_File
 echo "$Openwrt_Version" > ./package/base-files/files/etc/openwrt_info
 sed -i "s?Openwrt?Openwrt $Openwrt_Version / AutoUpdate $AutoUpdate_Version?g" ./package/base-files/files/etc/banner
