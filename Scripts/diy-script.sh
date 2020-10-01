@@ -32,7 +32,7 @@ do
 	else
 		svn checkout $3/$2 $2 > /dev/null 2>&1
 	fi
-	if [ -f $2/Makefile1 ] || [ -f $2/README1 ];then
+	if [ -f $2/Makefile ] || [ -f $2/README ];then
 		echo "[$(date "+%H:%M:%S")] Package $2 detected!"
 		case $2 in
 		OpenClash)
@@ -48,8 +48,8 @@ do
 		break
 	else
 		[ $Retry_Times -lt 1 ] && echo "[$(date "+%H:%M:%S")] Skip check out package $1 ..." && break
-		Retry_Times=$(($Retry_Times - 1))
 		echo "[$(date "+%H:%M:%S")] [$Retry_Times]Checkout failed,retry in 3s ..."
+		Retry_Times=$(($Retry_Times - 1))
 		rm -rf ./$2 > /dev/null 2>&1
 		sleep 3
 	fi
