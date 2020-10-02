@@ -28,7 +28,8 @@ while [ ! -f $2/Makefile ]
 do
 	echo "[$(date "+%H:%M:%S")] Checking out $2 from $3 ..."
 	if [ $1 == git ];then
-		git clone -b $4 $3/$2 $2 > /dev/null 2>&1
+		git clone -b $4 $3/$2 $2
+		# > /dev/null 2>&1
 	else
 		svn checkout $3/$2 $2 > /dev/null 2>&1
 	fi
