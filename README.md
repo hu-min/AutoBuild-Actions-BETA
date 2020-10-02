@@ -32,3 +32,10 @@ Actions for Building OpenWRT
 ```
 
 5. **添加自定义文件:** 首先上传自定义文件到`/Customize`,然后编辑 `Diy-Part1()` 函数,参照参照现有 `mv2` 语法添加自定义文件到源码
+
+使用指令升级固件:
+------
+
+在终端输入: `bash /bin/AutoUpdate.sh`
+
+非AutoBuild固件: `curl -s https://raw.githubusercontent.com/Hyy2001X/Openwrt-AutoUpdate/master/AutoUpdate.sh | sh`
