@@ -28,8 +28,7 @@ while [ ! -f $2/Makefile ]
 do
 	echo "[$(date "+%H:%M:%S")] Checking out $2 from $3 ..."
 	if [ $1 == git ];then
-		git clone -b $4 $3/$2 $2
-		# > /dev/null 2>&1
+		git clone -b $4 $3/$2 $2 > /dev/null 2>&1
 	else
 		svn checkout $3/$2 $2 > /dev/null 2>&1
 	fi
@@ -82,7 +81,7 @@ mv2 AutoUpdate.sh package/base-files/files/bin
 mv2 firewall.config package/network/config/firewall/files
 mv2 banner package/base-files/files/etc
 
-ExtraPackages git luci-app-autoupdate https://github.com/Hyy2001X master
+ExtraPackages git luci-app-autoupdate https://github.com/Hyy2001X main
 ExtraPackages git luci-theme-argon https://github.com/jerrykuku 18.06
 #ExtraPackages svn luci-theme-opentomato https://github.com/kenzok8/openwrt-packages/trunk
 #ExtraPackages svn luci-theme-opentomcat https://github.com/kenzok8/openwrt-packages/trunk
