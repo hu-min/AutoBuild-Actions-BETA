@@ -3,7 +3,7 @@
 # AutoBuild Module by Hyy2001
 # AutoUpdate
 
-Version=V3.4
+Version=V3.5
 DEFAULT_DEVICE=d-team_newifi-d2
 Github=https://github.com/Hyy2001X/AutoBuild-Actions
 
