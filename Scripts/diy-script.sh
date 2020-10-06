@@ -81,6 +81,7 @@ mv2 system package/base-files/files/etc/config
 mv2 AutoUpdate.sh package/base-files/files/bin
 mv2 firewall.config package/network/config/firewall/files
 mv2 banner package/base-files/files/etc
+mv2 mt76.mk package/kernel/mt76 Makefile
 
 ExtraPackages git luci-app-autoupdate https://github.com/Hyy2001X main
 ExtraPackages git luci-theme-argon https://github.com/jerrykuku 18.06
@@ -98,7 +99,6 @@ ExtraPackages svn luci-app-socat https://github.com/xiaorouji/openwrt-package/tr
 
 Diy-Part2() {
 mv2 mwan3 package/feeds/packages/mwan3/files/etc/config
-mv2 mt76.mk package/kernel/mt76 Makefile
 echo "Author: $Author"
 echo "Openwrt Version: $Openwrt_Version"
 echo "AutoUpdate Version: $AutoUpdate_Version"
