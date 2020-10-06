@@ -18,11 +18,11 @@ Actions for Building OpenWRT
 客制化固件:
 ------
 
-1. 进入你的`AutoBuild-Actions`仓库
+1. 进入你的`AutoBuild-Actions`仓库,**最好先同步我的最新改动以获得更多特性(bug)**
 
-2. 编辑`/Customize/AutoUpdate.sh`文件,修改`第 7 行`为你要编译的设备名称,修改`第 8 行`为你的 Github 地址
+2. 编辑`/Customize/AutoUpdate.sh`文件,修改`第 7 行`为你要编译的**标准设备名称**,修改`第 8 行`为你的 **Github 地址**
 
-3. 编辑`/Sctipts/diy-script.sh`文件,修改`第 7 行`为作者,作者将在路由器后台显示`Compiled by Hyy2001`
+3. 编辑`/Sctipts/diy-script.sh`文件,修改`第 7 行`为作者,作者将在 OpenWrt 首页显示,例如`Compiled by Hyy2001`
 
 4. **添加额外的软件包:** 编辑`Scrips/diy-script.sh`中的 `Diy-Part1()` 函数,参照下方语法添加第三方包到源码
 ```
@@ -31,16 +31,16 @@ Actions for Building OpenWRT
    [svn checkout]  ExtraPackages svn Github仓库/trunk
 ```
 
-5. **添加自定义文件:** 首先上传自定义文件到`/Customize`,然后编辑 `Diy-Part1()` 函数,参照参照现有 `mv2` 语法添加自定义文件到源码
+5. **添加自定义文件:** 首先上传文件到`/Customize`,然后编辑`Scrips/diy-script.sh`,参照参照现有 `mv2` 语法添加自定义文件到源码
 
 自动编译&&升级固件:
 ------
 
 1. 进入你的`AutoBuild-Actions`仓库
 
-2. 编辑`/.github/workflows/AutoBuild.yml`文件,取消注释`第 21-22 行`,并按需修改
+2. 编辑`/.github/workflows/AutoBuild.yml`文件,取消注释`第 21-22 行`,并按需修改 corntab 参数
 
-3. 打开Openwrt管理界面,点击`系统`-`定时更新`,设置自动升级的时间并保存(**需要 [luci-app-autoupdate](https://github.com/Hyy2001X/luci-app-autoupdate) 支持**)
+3. 打开Openwrt管理界面,点击`系统`-`定时更新`,设置自动升级的时间点并保存(**需要 [luci-app-autoupdate](https://github.com/Hyy2001X/luci-app-autoupdate) 支持**)
 
 使用指令升级固件:
 ------
