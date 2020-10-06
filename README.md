@@ -20,7 +20,7 @@ Actions for Building OpenWRT
 
 1. 进入你的`AutoBuild-Actions`仓库,**最好先同步我的最新改动以获得更多特性(bug)**
 
-2. 编辑`/Customize/AutoUpdate.sh`文件,修改`第 7 行`为你要编译的**标准设备名称**,修改`第 8 行`为你的 **Github 地址**
+2. 编辑`/Customize/AutoUpdate.sh`文件,修改`第 7 行`为你的 **设备名称**,修改`第 8 行`为你的 **Github 地址**
 
 3. 编辑`/Sctipts/diy-script.sh`文件,修改`第 7 行`为作者,作者将在 OpenWrt 首页显示
 
