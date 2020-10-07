@@ -14,8 +14,7 @@ Actions for Building OpenWRT
 
 4. 点击右上方菜单中的`Settings`,点击`Secrets`-`New Secrets`,`Name`项填写`RELEASE_TOKEN`,`Value`项填写你在第 1 步中获取到的Token
 
-客制化固件:
-------
+## 客制化固件:
 
 1. 进入你的`AutoBuild-Actions`仓库,**最好先同步我的最新改动以获得更多特性(bug)**
 
@@ -32,8 +31,7 @@ Actions for Building OpenWRT
 
 5. 添加自定义文件: 首先上传文件到`/Customize`,然后编辑`Scrips/diy-script.sh`,参照参照现有 `mv2` 语法添加自定义文件到源码
 
-自动编译&&升级固件:
-------
+## 自动编译&&升级固件:
 
 1. 进入你的`AutoBuild-Actions`仓库
 
@@ -41,8 +39,7 @@ Actions for Building OpenWRT
 
 3. 打开Openwrt管理界面,点击`系统`-`定时更新`,设置自动升级的时间点并保存(**需要 [luci-app-autoupdate](https://github.com/Hyy2001X/luci-app-autoupdate) 支持**)
 
-使用指令升级固件:
-------
+## 使用指令升级固件:
 
 在终端输入: `bash /bin/AutoUpdate.sh`
 
