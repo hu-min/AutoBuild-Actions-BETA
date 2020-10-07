@@ -10,7 +10,7 @@ Actions for Building OpenWRT
 
 2. 复制获取到的Token值,**一定要保存到本地,Token值只会显示一次!**
 
-3. `Fork`此仓库,然后进入你的`AutoBuild-Actions`仓库
+3. ***Fork*** 此仓库,然后进入你的`AutoBuild-Actions`仓库
 
 4. 点击右上方菜单中的`Settings`,点击`Secrets`-`New Secrets`,`Name`项填写`RELEASE_TOKEN`,`Value`项填写你在第 1 步中获取到的Token
 
