@@ -4,8 +4,7 @@ Actions for Building OpenWRT
 
 测试通过的设备: **!x86**、`d-team_newifi-d2`、`phicomm_k2p`
 
-配置环境/Usage:
-------
+## Github Actions 部署指南:
 
 1. 首先需要获取[Github Token](https://github.com/settings/tokens/new),`Note`项随意填写,`Select scopes`项如果不懂就全部打勾,完成后点击`Generate token`
 
