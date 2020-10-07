@@ -31,6 +31,8 @@ Actions for Building OpenWRT
 
 5. 添加自定义文件: 首先上传文件到`/Customize`,然后编辑`Scrips/diy-script.sh`,参照参照现有 `mv2` 语法添加自定义文件到源码
 
+6. **启动编译**: 点击右上方`Star`即可开始编译,详细信息在`菜单-Actions`中显示
+
 ## 自动编译&&升级固件:
 
 1. 进入你的`AutoBuild-Actions`仓库
