@@ -14,6 +14,8 @@ Actions for Building OpenWRT
 
 4. 点击右上方菜单中的`Settings`,点击`Secrets`-`New Secrets`,`Name`项填写`RELEASE_TOKEN`,`Value`项填写你在第 1 步中获取到的Token
 
+**注: 以上操作只需操作一次**
+
 ## 客制化固件:
 
 1. 进入你的`AutoBuild-Actions`仓库,**最好先同步我的最新改动以获得更多特性(bug)**
