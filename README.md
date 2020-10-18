@@ -2,7 +2,9 @@
 
 Actions for Building OpenWRT
 
-测试通过的设备: **!x86**、`d-team_newifi-d2`、`phicomm_k2p`
+测试通过的设备: `d-team_newifi-d2`、`phicomm_k2p`
+
+测试通过的源码: [lede](https://github.com/coolsnowwolf/lede)
 
 ## Github Actions 部署指南:
 
@@ -47,8 +49,8 @@ Actions for Building OpenWRT
 
 ## 使用指令升级固件:
 
-    在终端输入: `bash /bin/AutoUpdate.sh`
+   在终端输入: `bash /bin/AutoUpdate.sh`
 
-    不保留配置升级: `bash /bin/AutoUpdate.sh -n`
+   不保留配置升级: `bash /bin/AutoUpdate.sh -n`
 
-    使用最新脚本升级: `curl -s https://raw.githubusercontent.com/Hyy2001X/Openwrt-AutoUpdate/master/AutoUpdate.sh | bash`
+   使用最新脚本升级: `curl -s https://raw.githubusercontent.com/Hyy2001X/Openwrt-AutoUpdate/master/AutoUpdate.sh | bash`
