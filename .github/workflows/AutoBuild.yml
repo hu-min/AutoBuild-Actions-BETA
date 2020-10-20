@@ -93,11 +93,8 @@ jobs:
       run: |
         cd openwrt
         source $GITHUB_WORKSPACE/$CUSTOM_SCRIPT && Diy-Part3
-
-    - name: Generate Tag
-      run: |
-        echo "##$(date +"%Y%m%d")" > update_log.txt
-        echo "Artifacts_DATE=$(date +"%Y-%m-%d-%H:%M")" >> $GITHUB_ENV
+        echo "## $(date +"%Y%m%d")" > update_log.txt
+        echo "Artifacts_DATE=$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
 
     - name: Upload Firmware to Artifacts
       uses: actions/upload-artifact@main
@@ -126,5 +123,5 @@ jobs:
     - name: Remove old Artifacts
       uses: c-hive/gha-remove-artifacts@v1
       with:
-        age: '1 month'
+        age: '1 day'
         skip-recent: 3
