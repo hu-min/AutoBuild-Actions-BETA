@@ -40,7 +40,7 @@ do
 		echo "[$(date "+%H:%M:%S")] Package $2 is detected!"
 		case $2 in
 		OpenClash)
-			mv -f ./$2/luci-app-openclash ./package/leanINFO
+			mv -f ./$2/luci-app-openclash ./package/lean
 		;;
 		openwrt-OpenAppFilter)
 			mv -f ./$2 ./package/lean
