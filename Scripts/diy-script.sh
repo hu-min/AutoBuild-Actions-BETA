@@ -4,14 +4,14 @@
 # AutoBuild Actions
 
 Diy_Core() {
-export Author=Hyy2001
-export Default_Device=d-team_newifi-d2
+Author=Hyy2001
+Default_Device=d-team_newifi-d2
 
-export AutoUpdate_Version=`awk 'NR==6' ./package/base-files/files/bin/AutoUpdate.sh | awk -F'[="]+' '/Version/{print $2}'`
-export Compile_Date=`date +'%Y/%m/%d'`
+AutoUpdate_Version=`awk 'NR==6' ./package/base-files/files/bin/AutoUpdate.sh | awk -F'[="]+' '/Version/{print $2}'`
+Compile_Date=`date +'%Y/%m/%d'`
 export Compile_Time=`date +'%Y-%m-%d %H:%M:%S'`
-export Default_File=./package/lean/default-settings/files/zzz-default-settings
-export Lede_Version=`egrep -o "R[0-9]+\.[0-9]+\.[0-9]+" $Default_File`
+Default_File=./package/lean/default-settings/files/zzz-default-settings
+Lede_Version=`egrep -o "R[0-9]+\.[0-9]+\.[0-9]+" $Default_File`
 export Openwrt_Version="$Lede_Version-`date +%Y%m%d`"
 }
 
