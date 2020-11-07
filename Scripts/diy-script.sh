@@ -4,23 +4,22 @@
 # AutoBuild Actions
 
 Diy_Core() {
-Author=Hyy2001
-Default_Device=d-team_newifi-d2
+export Author=Hyy2001
+export Default_Device=d-team_newifi-d2
 
-AutoUpdate_Version=`awk 'NR==6' ./package/base-files/files/bin/AutoUpdate.sh | awk -F'[="]+' '/Version/{print $2}'`
-Compile_Date=`date +'%Y/%m/%d'`
-Compile_Time=`date +'%Y-%m-%d %H:%M:%S'`
-Default_File=./package/lean/default-settings/files/zzz-default-settings
-Lede_Version=`egrep -o "R[0-9]+\.[0-9]+\.[0-9]+" $Default_File`
-Openwrt_Version="$Lede_Version-`date +%Y%m%d`"
+ export AutoUpdate_Version=`awk 'NR==6' ./package/base-files/files/bin/AutoUpdate.sh | awk -F'[="]+' '/Version/{print $2}'`
+export Compile_Date=`date +'%Y/%m/%d'`
+export Compile_Time=`date +'%Y-%m-%d %H:%M:%S'`
+export Default_File=./package/lean/default-settings/files/zzz-default-settings
+export Lede_Version=`egrep -o "R[0-9]+\.[0-9]+\.[0-9]+" $Default_File`
+export Openwrt_Version="$Lede_Version-`date +%Y%m%d`"
 }
 
 GET_TARGET_INFO() {
-Diy_Core
-TARGET_PROFILE=`egrep -o "CONFIG_TARGET.*DEVICE.*=y" .config | sed -r 's/.*DEVICE_(.*)=y/\1/'`
-[ -z $TARGET_PROFILE ] && TARGET_PROFILE=$Default_Device
-TARGET_BOARD=`awk -F'[="]+' '/TARGET_BOARD/{print $2}' .config`
-TARGET_SUBTARGET=`awk -F'[="]+' '/TARGET_SUBTARGET/{print $2}' .config`
+export TARGET_PROFILE=`egrep -o "CONFIG_TARGET.*DEVICE.*=y" .config | sed -r 's/.*DEVICE_(.*)=y/\1/'`
+[ -z $TARGET_PROFILE ] && export TARGET_PROFILE=$Default_Device
+export TARGET_BOARD=`awk -F'[="]+' '/TARGET_BOARD/{print $2}' .config`
+export TARGET_SUBTARGET=`awk -F'[="]+' '/TARGET_SUBTARGET/{print $2}' .config`
 }
 
 ExtraPackages() {
@@ -41,7 +40,7 @@ do
 		echo "[$(date "+%H:%M:%S")] Package $2 is detected!"
 		case $2 in
 		OpenClash)
-			mv -f ./$2/luci-app-openclash ./package/lean
+			mv -f ./$2/luci-app-openclash ./package/leanINFO
 		;;
 		openwrt-OpenAppFilter)
 			mv -f ./$2 ./package/lean
@@ -83,6 +82,8 @@ fi
 }
 
 Diy-Part1() {
+Diy_Core
+GET_TARGET_INFO
 [ -f feeds.conf.default ] && sed -i "s/#src-git helloworld/src-git helloworld/g" feeds.conf.default
 [ ! -d ./package/lean ] && mkdir ./package/lean
 
@@ -122,7 +123,6 @@ ExtraPackages svn luci-app-socat https://github.com/xiaorouji/openwrt-package/tr
 }
 
 Diy-Part2() {
-GET_TARGET_INFO
 mv2 mwan3 package/feeds/packages/mwan3/files/etc/config
 echo "Author: $Author"
 echo "Lede Version: $Openwrt_Version"
@@ -134,7 +134,6 @@ sed -i "s?Openwrt?Openwrt $Openwrt_Version / AutoUpdate $AutoUpdate_Version?g" .
 }
 
 Diy-Part3() {
-GET_TARGET_INFO
 Default_Firmware=openwrt-$TARGET_BOARD-$TARGET_SUBTARGET-$TARGET_PROFILE-squashfs-sysupgrade.bin
 AutoBuild_Firmware=AutoBuild-$TARGET_PROFILE-Lede-${Openwrt_Version}.bin
 AutoBuild_Detail=AutoBuild-$TARGET_PROFILE-Lede-${Openwrt_Version}.detail
