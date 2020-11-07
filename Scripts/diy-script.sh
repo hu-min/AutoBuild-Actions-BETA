@@ -7,7 +7,7 @@ Diy_Core() {
 export Author=Hyy2001
 export Default_Device=d-team_newifi-d2
 
- export AutoUpdate_Version=`awk 'NR==6' ./package/base-files/files/bin/AutoUpdate.sh | awk -F'[="]+' '/Version/{print $2}'`
+export AutoUpdate_Version=`awk 'NR==6' ./package/base-files/files/bin/AutoUpdate.sh | awk -F'[="]+' '/Version/{print $2}'`
 export Compile_Date=`date +'%Y/%m/%d'`
 export Compile_Time=`date +'%Y-%m-%d %H:%M:%S'`
 export Default_File=./package/lean/default-settings/files/zzz-default-settings
@@ -82,8 +82,6 @@ fi
 }
 
 Diy-Part1() {
-Diy_Core
-GET_TARGET_INFO
 [ -f feeds.conf.default ] && sed -i "s/#src-git helloworld/src-git helloworld/g" feeds.conf.default
 [ ! -d ./package/lean ] && mkdir ./package/lean
 
@@ -123,6 +121,8 @@ ExtraPackages svn luci-app-socat https://github.com/xiaorouji/openwrt-package/tr
 }
 
 Diy-Part2() {
+Diy_Core
+GET_TARGET_INFO
 mv2 mwan3 package/feeds/packages/mwan3/files/etc/config
 echo "Author: $Author"
 echo "Lede Version: $Openwrt_Version"
