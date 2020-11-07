@@ -9,17 +9,18 @@ Default_Device=d-team_newifi-d2
 
 AutoUpdate_Version=`awk 'NR==6' ./package/base-files/files/bin/AutoUpdate.sh | awk -F'[="]+' '/Version/{print $2}'`
 Compile_Date=`date +'%Y/%m/%d'`
-export Compile_Time=`date +'%Y-%m-%d %H:%M:%S'`
+echo "Compile_Time=`date +'%Y-%m-%d %H:%M:%S'`" > $GITHUB_WORKSPACE/Diy_Core.txt
 Default_File=./package/lean/default-settings/files/zzz-default-settings
 Lede_Version=`egrep -o "R[0-9]+\.[0-9]+\.[0-9]+" $Default_File`
-export Openwrt_Version="$Lede_Version-`date +%Y%m%d`"
-}
-
-GET_TARGET_INFO() {
-export TARGET_PROFILE=`egrep -o "CONFIG_TARGET.*DEVICE.*=y" .config | sed -r 's/.*DEVICE_(.*)=y/\1/'`
-[ -z $TARGET_PROFILE ] && export TARGET_PROFILE=$Default_Device
-export TARGET_BOARD=`awk -F'[="]+' '/TARGET_BOARD/{print $2}' .config`
-export TARGET_SUBTARGET=`awk -F'[="]+' '/TARGET_SUBTARGET/{print $2}' .config`
+echo "Openwrt_Version=$Lede_Version-`date +%Y%m%d`" >> $GITHUB_WORKSPACE/Diy_Core.txt
+TARGET_PROFILE=`egrep -o "CONFIG_TARGET.*DEVICE.*=y" .config | sed -r 's/.*DEVICE_(.*)=y/\1/'`
+if [ -z $TARGET_PROFILE ];then
+	echo "TARGET_PROFILE=$Default_Device" >> $GITHUB_WORKSPACE/Diy_Core.txt
+else
+	echo "TARGET_PROFILE=$TARGET_PROFILE" >> $GITHUB_WORKSPACE/Diy_Core.txt
+fi
+echo "TARGET_BOARD=`awk -F'[="]+' '/TARGET_BOARD/{print $2}' .config`" >> $GITHUB_WORKSPACE/Diy_Core.txt
+echo "TARGET_SUBTARGET=`awk -F'[="]+' '/TARGET_SUBTARGET/{print $2}' .config`" >> $GITHUB_WORKSPACE/Diy_Core.txt
 }
 
 ExtraPackages() {
@@ -122,7 +123,7 @@ ExtraPackages svn luci-app-socat https://github.com/xiaorouji/openwrt-package/tr
 
 Diy-Part2() {
 Diy_Core
-GET_TARGET_INFO
+. $GITHUB_WORKSPACE/Diy_Core.txt
 mv2 mwan3 package/feeds/packages/mwan3/files/etc/config
 echo "Author: $Author"
 echo "Lede Version: $Openwrt_Version"
@@ -134,6 +135,7 @@ sed -i "s?Openwrt?Openwrt $Openwrt_Version / AutoUpdate $AutoUpdate_Version?g" .
 }
 
 Diy-Part3() {
+. $GITHUB_WORKSPACE/Diy_Core.txt
 Default_Firmware=openwrt-$TARGET_BOARD-$TARGET_SUBTARGET-$TARGET_PROFILE-squashfs-sysupgrade.bin
 AutoBuild_Firmware=AutoBuild-$TARGET_PROFILE-Lede-${Openwrt_Version}.bin
 AutoBuild_Detail=AutoBuild-$TARGET_PROFILE-Lede-${Openwrt_Version}.detail
