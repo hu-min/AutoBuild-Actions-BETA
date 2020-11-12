@@ -7,20 +7,20 @@ Diy_Core() {
 Author=Hyy2001
 Default_Device=d-team_newifi-d2
 
-AutoUpdate_Version=`awk 'NR==6' ./package/base-files/files/bin/AutoUpdate.sh | awk -F'[="]+' '/Version/{print $2}'`
-Compile_Date=`date +'%Y/%m/%d'`
-Compile_Time=`date +'%Y-%m-%d %H:%M:%S'`
-Default_File=./package/lean/default-settings/files/zzz-default-settings
-Lede_Version=`egrep -o "R[0-9]+\.[0-9]+\.[0-9]+" $Default_File`
+AutoUpdate_Version=$(awk 'NR==6' ./package/base-files/files/bin/AutoUpdate.sh | awk -F '[="]+' '/Version/{print $2}')
+Compile_Date=$(date +'%Y/%m/%d')
+Compile_Time=$(date +'%Y-%m-%d %H:%M:%S')
+Default_File="./package/lean/default-settings/files/zzz-default-settings"
+Lede_Version=$(egrep -o "R[0-9]+\.[0-9]+\.[0-9]+" $Default_File)
 Openwrt_Version="$Lede_Version-`date +%Y%m%d`"
 }
 
 GET_TARGET_INFO() {
 Diy_Core
-TARGET_PROFILE=`egrep -o "CONFIG_TARGET.*DEVICE.*=y" .config | sed -r 's/.*DEVICE_(.*)=y/\1/'`
-[ -z $TARGET_PROFILE ] && TARGET_PROFILE=$Default_Device
-TARGET_BOARD=`awk -F'[="]+' '/TARGET_BOARD/{print $2}' .config`
-TARGET_SUBTARGET=`awk -F'[="]+' '/TARGET_SUBTARGET/{print $2}' .config`
+TARGET_PROFILE=$(egrep -o "CONFIG_TARGET.*DEVICE.*=y" .config | sed -r 's/.*DEVICE_(.*)=y/\1/')
+[ -z "$TARGET_PROFILE" ] && TARGET_PROFILE="$Default_Device"
+TARGET_BOARD=$(awk -F '[="]+' '/TARGET_BOARD/{print $2}' .config)
+TARGET_SUBTARGET=$(awk -F '[="]+' '/TARGET_SUBTARGET/{print $2}' .config)
 }
 
 ExtraPackages() {
@@ -123,8 +123,8 @@ mkdir -p ./bin/Firmware
 echo "Firmware: $AutoBuild_Firmware"
 mv ./bin/targets/$TARGET_BOARD/$TARGET_SUBTARGET/$Default_Firmware ./bin/Firmware/$AutoBuild_Firmware
 echo "[$(date "+%H:%M:%S")] Calculating MD5 and SHA256 ..."
-Firmware_MD5=`md5sum ./bin/Firmware/$AutoBuild_Firmware | cut -d ' ' -f1`
-Firmware_SHA256=`sha256sum ./bin/Firmware/$AutoBuild_Firmware | cut -d ' ' -f1`
+Firmware_MD5=$(md5sum ./bin/Firmware/$AutoBuild_Firmware | cut -d ' ' -f1)
+Firmware_SHA256=$(sha256sum ./bin/Firmware/$AutoBuild_Firmware | cut -d ' ' -f1)
 echo -e "MD5: $Firmware_MD5\nSHA256: $Firmware_SHA256"
 echo "编译日期:$Compile_Time" > ./bin/Firmware/$AutoBuild_Detail
 echo -e "\nMD5:$Firmware_MD5\nSHA256:$Firmware_SHA256" >> ./bin/Firmware/$AutoBuild_Detail
