@@ -37,9 +37,9 @@
 
    **添加额外的软件包:** 编辑`Scripts/diy-script.sh`中的 `Diy-Part1()` 函数,参照下方语法添加第三方包到源码
 ```
-   [git clone -b]  ExtraPackages git Github仓库 分支
+   [git clone -b]  ExtraPackages git 安装位置 软件包名 Github仓库地址 远程分支
     
-   [svn checkout]  ExtraPackages svn Github仓库/trunk
+   [svn checkout]  ExtraPackages svn 安装位置 软件包名 Github仓库地址/trunk
 ```
 
    **添加自定义文件:** 首先将文件上传到`/Customize`,然后编辑`Scripts/diy-script.sh`,参照参照现有 `mv2` 语法添加文件到源码中
