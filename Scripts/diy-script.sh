@@ -29,7 +29,7 @@ ExtraPackages() {
 Retry_Times=3
 while [ ! -f $3/Makefile ]
 do
-	echo "[$(date "+%H:%M:%S")] Checking out package [$2] from $3 ..."
+	echo "[$(date "+%H:%M:%S")] Checking out package [$3] from $4 ..."
 	case $1 in
 	git)
 		git clone -b $5 $4/$3 $3 > /dev/null 2>&1
@@ -39,7 +39,7 @@ do
 	esac
 	if [ -f $3/Makefile ] || [ -f $3/README* ];then
 		echo "[$(date "+%H:%M:%S")] Package [$3] is detected!"
-		mv -f $3 ./package/lean
+		mv -f $3 ./package/$2
 		break
 	else
 		[ $Retry_Times -lt 1 ] && echo "[$(date "+%H:%M:%S")] Skip check out package [$3] ..." && break
