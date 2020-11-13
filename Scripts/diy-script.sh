@@ -24,28 +24,33 @@ TARGET_SUBTARGET=$(awk -F '[="]+' '/TARGET_SUBTARGET/{print $2}' .config)
 }
 
 ExtraPackages() {
-[ -d ./package/$2/$3 ] && rm -rf ./package/$2/$3
-[ -d ./$3 ] && rm -rf ./$3
+PKG_PROTO=$1
+PKG_DIR=$2
+PKG_NAME=$3
+REPO_URL=$4
+REPO_BRANCH=$5
+[ -d package/$PKG_DIR/$PKG_NAME ] && rm -rf package/$PKG_DIR/$PKG_NAME
+[ -d $PKG_NAME ] && rm -rf $PKG_NAME
 Retry_Times=3
-while [ ! -f $3/Makefile ]
+while [ ! -f $PKG_NAME/Makefile ]
 do
-	echo "[$(date "+%H:%M:%S")] Checking out package [$3] from $4 ..."
-	case $1 in
+	echo "[$(date "+%H:%M:%S")] Checking out package [$PKG_NAME] from $REPO_URL ..."
+	case $PKG_PROTO in
 	git)
-		git clone -b $5 $4/$3 $3 > /dev/null 2>&1
+		git clone -b $REPO_BRANCH $REPO_URL/$PKG_NAME $PKG_NAME > /dev/null 2>&1
 	;;
 	svn)
-		svn checkout $4/$3 $3 > /dev/null 2>&1
+		svn checkout $REPO_URL/$PKG_NAME $PKG_NAME > /dev/null 2>&1
 	esac
-	if [ -f $3/Makefile ] || [ -f $3/README* ];then
-		echo "[$(date "+%H:%M:%S")] Package [$3] is detected!"
-		mv -f $3 ./package/$2
+	if [ -f $PKG_NAME/Makefile ] || [ -f $PKG_NAME/README* ];then
+		echo "[$(date "+%H:%M:%S")] Package [$PKG_NAME] is detected!"
+		mv -f $PKG_NAME package/$PKG_DIR
 		break
 	else
-		[ $Retry_Times -lt 1 ] && echo "[$(date "+%H:%M:%S")] Skip check out package [$3] ..." && break
+		[ $Retry_Times -lt 1 ] && echo "[$(date "+%H:%M:%S")] Skip check out package [$PKG_NAME] ..." && break
 		echo "[$(date "+%H:%M:%S")] [$Retry_Times] Checkout failed,retry in 3s ..."
 		Retry_Times=$(($Retry_Times - 1))
-		rm -rf $3 > /dev/null 2>&1
+		rm -rf $PKG_NAME > /dev/null 2>&1
 		sleep 3
 	fi
 done
