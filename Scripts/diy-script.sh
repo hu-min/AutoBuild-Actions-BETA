@@ -6,21 +6,66 @@
 Diy_Core() {
 Author=Hyy2001
 Default_Device=d-team_newifi-d2
-
-AutoUpdate_Version=$(awk 'NR==6' ./package/base-files/files/bin/AutoUpdate.sh | awk -F '[="]+' '/Version/{print $2}')
-Compile_Date=$(date +'%Y/%m/%d')
-Compile_Time=$(date +'%Y-%m-%d %H:%M:%S')
-Default_File="./package/lean/default-settings/files/zzz-default-settings"
-Lede_Version=$(egrep -o "R[0-9]+\.[0-9]+\.[0-9]+" $Default_File)
-Openwrt_Version="$Lede_Version-`date +%Y%m%d`"
+GET_INFO
 }
 
-GET_TARGET_INFO() {
+Diy-Part1() {
 Diy_Core
-TARGET_PROFILE=$(egrep -o "CONFIG_TARGET.*DEVICE.*=y" .config | sed -r 's/.*DEVICE_(.*)=y/\1/')
-[ -z "$TARGET_PROFILE" ] && TARGET_PROFILE="$Default_Device"
-TARGET_BOARD=$(awk -F '[="]+' '/TARGET_BOARD/{print $2}' .config)
-TARGET_SUBTARGET=$(awk -F '[="]+' '/TARGET_SUBTARGET/{print $2}' .config)
+[ -f feeds.conf.default ] && sed -i "s/#src-git helloworld/src-git helloworld/g" feeds.conf.default
+[ ! -d package/lean ] && mkdir package/lean
+
+mv2 mac80211.sh package/kernel/mac80211/files/lib/wifi
+mv2 system package/base-files/files/etc/config
+mv2 AutoUpdate.sh package/base-files/files/bin
+mv2 banner package/base-files/files/etc
+
+# ExtraPackages svn network/services dnsmasq https://github.com/openwrt/openwrt/trunk/package/network/services
+# ExtraPackages svn network/services hostapd https://github.com/openwrt/openwrt/trunk/package/network/services
+# ExtraPackages svn network/services dropbear https://github.com/openwrt/openwrt/trunk/package/network/services
+# ExtraPackages svn network/services ppp https://github.com/openwrt/openwrt/trunk/package/network/services
+# ExtraPackages git kernel mt76 https://github.com/openwrt master
+# ExtraPackages svn firmware linux-firmware https://github.com/openwrt/openwrt/trunk/package/firmware
+
+ExtraPackages git lean luci-app-autoupdate https://github.com/Hyy2001X main
+ExtraPackages git lean luci-theme-argon https://github.com/jerrykuku 18.06
+ExtraPackages git lean luci-app-argon-config https://github.com/jerrykuku master
+ExtraPackages git lean luci-app-adguardhome https://github.com/Hyy2001X master
+ExtraPackages svn lean luci-app-smartdns https://github.com/project-openwrt/openwrt/trunk/package/ntlf9t
+ExtraPackages svn lean smartdns https://github.com/project-openwrt/openwrt/trunk/package/ntlf9t
+ExtraPackages git lean OpenClash https://github.com/vernesong master
+ExtraPackages git lean luci-app-serverchan https://github.com/tty228 master
+ExtraPackages svn lean luci-app-socat https://github.com/xiaorouji/openwrt-package/trunk/lienol
+# ExtraPackages git lean openwrt-upx https://github.com/Hyy2001X master
+# ExtraPackages svn lean luci-app-mentohust https://github.com/project-openwrt/openwrt/trunk/package/ctcgfw
+# ExtraPackages svn lean mentohust https://github.com/project-openwrt/openwrt/trunk/package/ctcgfw
+# ExtraPackages git lean openwrt-OpenAppFilter https://github.com/Lienol master
+# ExtraPackages svn lean AdGuardHome https://github.com/project-openwrt/openwrt/trunk/package/ntlf9t
+}
+
+Diy-Part2() {
+mv2 mwan3 package/feeds/packages/mwan3/files/etc/config
+echo "Author: $Author"
+echo "Lede Version: $Openwrt_Version"
+echo "AutoUpdate Version: $AutoUpdate_Version"
+echo "Router: $TARGET_PROFILE"
+sed -i "s?$Lede_Version?$Lede_Version Compiled by $Author [$Compile_Date]?g" $Default_File
+echo "$Openwrt_Version" > package/base-files/files/etc/openwrt_info
+sed -i "s?Openwrt?Openwrt $Openwrt_Version / AutoUpdate $AutoUpdate_Version?g" package/base-files/files/etc/banner
+}
+
+Diy-Part3() {
+Default_Firmware=openwrt-$TARGET_BOARD-$TARGET_SUBTARGET-$TARGET_PROFILE-squashfs-sysupgrade.bin
+AutoBuild_Firmware=AutoBuild-$TARGET_PROFILE-Lede-${Openwrt_Version}.bin
+AutoBuild_Detail=AutoBuild-$TARGET_PROFILE-Lede-${Openwrt_Version}.detail
+mkdir -p bin/Firmware
+echo "Firmware: $AutoBuild_Firmware"
+mv bin/targets/$TARGET_BOARD/$TARGET_SUBTARGET/$Default_Firmware bin/Firmware/$AutoBuild_Firmware
+echo "[$(date "+%H:%M:%S")] Calculating MD5 and SHA256 ..."
+Firmware_MD5=$(md5sum bin/Firmware/$AutoBuild_Firmware | cut -d ' ' -f1)
+Firmware_SHA256=$(sha256sum bin/Firmware/$AutoBuild_Firmware | cut -d ' ' -f1)
+echo -e "MD5: $Firmware_MD5\nSHA256: $Firmware_SHA256"
+touch bin/Firmware/$AutoBuild_Detail
+echo -e "\nMD5:$Firmware_MD5\nSHA256:$Firmware_SHA256" >> bin/Firmware/$AutoBuild_Detail
 }
 
 ExtraPackages() {
@@ -77,62 +122,22 @@ else
 fi
 }
 
-Diy-Part1() {
-[ -f feeds.conf.default ] && sed -i "s/#src-git helloworld/src-git helloworld/g" feeds.conf.default
-[ ! -d package/lean ] && mkdir package/lean
-
-mv2 mac80211.sh package/kernel/mac80211/files/lib/wifi
-mv2 system package/base-files/files/etc/config
-mv2 AutoUpdate.sh package/base-files/files/bin
-mv2 banner package/base-files/files/etc
-
-# ExtraPackages svn network/services dnsmasq https://github.com/openwrt/openwrt/trunk/package/network/services
-# ExtraPackages svn network/services hostapd https://github.com/openwrt/openwrt/trunk/package/network/services
-# ExtraPackages svn network/services dropbear https://github.com/openwrt/openwrt/trunk/package/network/services
-# ExtraPackages svn network/services ppp https://github.com/openwrt/openwrt/trunk/package/network/services
-# ExtraPackages git kernel mt76 https://github.com/openwrt master
-# ExtraPackages svn firmware linux-firmware https://github.com/openwrt/openwrt/trunk/package/firmware
-
-ExtraPackages git lean luci-app-autoupdate https://github.com/Hyy2001X main
-ExtraPackages git lean luci-theme-argon https://github.com/jerrykuku 18.06
-ExtraPackages git lean luci-app-argon-config https://github.com/jerrykuku master
-ExtraPackages git lean luci-app-adguardhome https://github.com/Hyy2001X master
-ExtraPackages svn lean luci-app-smartdns https://github.com/project-openwrt/openwrt/trunk/package/ntlf9t
-ExtraPackages svn lean smartdns https://github.com/project-openwrt/openwrt/trunk/package/ntlf9t
-ExtraPackages git lean OpenClash https://github.com/vernesong master
-ExtraPackages git lean luci-app-serverchan https://github.com/tty228 master
-ExtraPackages svn lean luci-app-socat https://github.com/xiaorouji/openwrt-package/trunk/lienol
-# ExtraPackages git lean openwrt-upx https://github.com/Hyy2001X master
-# ExtraPackages svn lean luci-app-mentohust https://github.com/project-openwrt/openwrt/trunk/package/ctcgfw
-# ExtraPackages svn lean mentohust https://github.com/project-openwrt/openwrt/trunk/package/ctcgfw
-# ExtraPackages git lean openwrt-OpenAppFilter https://github.com/Lienol master
-# ExtraPackages svn lean AdGuardHome https://github.com/project-openwrt/openwrt/trunk/package/ntlf9t
-}
-
-Diy-Part2() {
-GET_TARGET_INFO
-mv2 mwan3 package/feeds/packages/mwan3/files/etc/config
-echo "Author: $Author"
-echo "Lede Version: $Openwrt_Version"
-echo "AutoUpdate Version: $AutoUpdate_Version"
-echo "Router: $TARGET_PROFILE"
-sed -i "s?$Lede_Version?$Lede_Version Compiled by $Author [$Compile_Date]?g" $Default_File
-echo "$Openwrt_Version" > package/base-files/files/etc/openwrt_info
-sed -i "s?Openwrt?Openwrt $Openwrt_Version / AutoUpdate $AutoUpdate_Version?g" package/base-files/files/etc/banner
-}
-
-Diy-Part3() {
-GET_TARGET_INFO
-Default_Firmware=openwrt-$TARGET_BOARD-$TARGET_SUBTARGET-$TARGET_PROFILE-squashfs-sysupgrade.bin
-AutoBuild_Firmware=AutoBuild-$TARGET_PROFILE-Lede-${Openwrt_Version}.bin
-AutoBuild_Detail=AutoBuild-$TARGET_PROFILE-Lede-${Openwrt_Version}.detail
-mkdir -p bin/Firmware
-echo "Firmware: $AutoBuild_Firmware"
-mv bin/targets/$TARGET_BOARD/$TARGET_SUBTARGET/$Default_Firmware bin/Firmware/$AutoBuild_Firmware
-echo "[$(date "+%H:%M:%S")] Calculating MD5 and SHA256 ..."
-Firmware_MD5=$(md5sum bin/Firmware/$AutoBuild_Firmware | cut -d ' ' -f1)
-Firmware_SHA256=$(sha256sum bin/Firmware/$AutoBuild_Firmware | cut -d ' ' -f1)
-echo -e "MD5: $Firmware_MD5\nSHA256: $Firmware_SHA256"
-echo "编译日期:$Compile_Time" > bin/Firmware/$AutoBuild_Detail
-echo -e "\nMD5:$Firmware_MD5\nSHA256:$Firmware_SHA256" >> bin/Firmware/$AutoBuild_Detail
+GET_INFO() {
+AutoUpdate_Version=$(awk 'NR==6' ./package/base-files/files/bin/AutoUpdate.sh | awk -F '[="]+' '/Version/{print $2}')
+Compile_Date=$(date +'%Y/%m/%d')
+Default_File="./package/lean/default-settings/files/zzz-default-settings"
+Lede_Version=$(egrep -o "R[0-9]+\.[0-9]+\.[0-9]+" $Default_File)
+Openwrt_Version="$Lede_Version-`date +%Y%m%d`"
+TARGET_PROFILE=$(egrep -o "CONFIG_TARGET.*DEVICE.*=y" .config | sed -r 's/.*DEVICE_(.*)=y/\1/')
+[ -z "$TARGET_PROFILE" ] && TARGET_PROFILE="$Default_Device"
+TARGET_BOARD=$(awk -F '[="]+' '/TARGET_BOARD/{print $2}' .config)
+TARGET_SUBTARGET=$(awk -F '[="]+' '/TARGET_SUBTARGET/{print $2}' .config)
+echo "$AutoUpdate_Version" >> $GITHUB_ENV
+echo "$Compile_Date" >> $GITHUB_ENV
+echo "$Default_File" >> $GITHUB_ENV
+echo "$Lede_Version" >> $GITHUB_ENV
+echo "$Openwrt_Version" >> $GITHUB_ENV
+echo "$TARGET_PROFILE=$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
+echo "$TARGET_BOARD" >> $GITHUB_ENV
+echo "$TARGET_SUBTARGET" >> $GITHUB_ENV
 }
