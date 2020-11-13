@@ -8,27 +8,6 @@ Author=Hyy2001
 Default_Device=d-team_newifi-d2
 }
 
-mv2() {
-if [ -f $GITHUB_WORKSPACE/Customize/$1 ];then
-	echo "[$(date "+%H:%M:%S")] Custom File [$1] is detected!"
-	if [ -z $2 ];then
-		Patch_Dir=$GITHUB_WORKSPACE/openwrt
-	else
-		Patch_Dir=$GITHUB_WORKSPACE/openwrt/$2
-	fi
-	[ ! -d $Patch_Dir ] && mkdir -p $Patch_Dir
-	if [ -z $3 ];then
-		[ -f $Patch_Dir/$1 ] && rm -f $Patch_Dir/$1 > /dev/null 2>&1
-		mv -f $GITHUB_WORKSPACE/Customize/$1 $Patch_Dir/$1
-	else
-		[ -f $Patch_Dir/$1 ] && rm -f $Patch_Dir/$3 > /dev/null 2>&1
-		mv -f $GITHUB_WORKSPACE/Customize/$1 $Patch_Dir/$3
-	fi
-else
-	echo "[$(date "+%H:%M:%S")] Custom File [$1] is not detected!"
-fi
-}
-
 Diy-Part1() {
 [ -f feeds.conf.default ] && sed -i "s/#src-git helloworld/src-git helloworld/g" feeds.conf.default
 [ ! -d package/lean ] && mkdir package/lean
@@ -133,4 +112,25 @@ do
 		sleep 3
 	fi
 done
+}
+
+mv2() {
+if [ -f $GITHUB_WORKSPACE/Customize/$1 ];then
+	echo "[$(date "+%H:%M:%S")] Custom File [$1] is detected!"
+	if [ -z $2 ];then
+		Patch_Dir=$GITHUB_WORKSPACE/openwrt
+	else
+		Patch_Dir=$GITHUB_WORKSPACE/openwrt/$2
+	fi
+	[ ! -d $Patch_Dir ] && mkdir -p $Patch_Dir
+	if [ -z $3 ];then
+		[ -f $Patch_Dir/$1 ] && rm -f $Patch_Dir/$1 > /dev/null 2>&1
+		mv -f $GITHUB_WORKSPACE/Customize/$1 $Patch_Dir/$1
+	else
+		[ -f $Patch_Dir/$1 ] && rm -f $Patch_Dir/$3 > /dev/null 2>&1
+		mv -f $GITHUB_WORKSPACE/Customize/$1 $Patch_Dir/$3
+	fi
+else
+	echo "[$(date "+%H:%M:%S")] Custom File [$1] is not detected!"
+fi
 }
