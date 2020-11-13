@@ -8,6 +8,27 @@ Author=Hyy2001
 Default_Device=d-team_newifi-d2
 }
 
+mv2() {
+if [ -f $GITHUB_WORKSPACE/Customize/$1 ];then
+	echo "[$(date "+%H:%M:%S")] Custom File [$1] is detected!"
+	if [ -z $2 ];then
+		Patch_Dir=$GITHUB_WORKSPACE/openwrt
+	else
+		Patch_Dir=$GITHUB_WORKSPACE/openwrt/$2
+	fi
+	[ ! -d $Patch_Dir ] && mkdir -p $Patch_Dir
+	if [ -z $3 ];then
+		[ -f $Patch_Dir/$1 ] && rm -f $Patch_Dir/$1 > /dev/null 2>&1
+		mv -f $GITHUB_WORKSPACE/Customize/$1 $Patch_Dir/$1
+	else
+		[ -f $Patch_Dir/$1 ] && rm -f $Patch_Dir/$3 > /dev/null 2>&1
+		mv -f $GITHUB_WORKSPACE/Customize/$1 $Patch_Dir/$3
+	fi
+else
+	echo "[$(date "+%H:%M:%S")] Custom File [$1] is not detected!"
+fi
+}
+
 Diy-Part1() {
 [ -f feeds.conf.default ] && sed -i "s/#src-git helloworld/src-git helloworld/g" feeds.conf.default
 [ ! -d package/lean ] && mkdir package/lean
@@ -41,17 +62,19 @@ ExtraPackages svn lean luci-app-socat https://github.com/xiaorouji/openwrt-packa
 }
 
 Diy-Part2() {
+GET_TARGET_INFO
 mv2 mwan3 package/feeds/packages/mwan3/files/etc/config
 echo "Author: $Author"
 echo "Lede Version: $Openwrt_Version"
 echo "AutoUpdate Version: $AutoUpdate_Version"
 echo "Router: $TARGET_PROFILE"
 sed -i "s?$Lede_Version?$Lede_Version Compiled by $Author [$Compile_Date]?g" $Default_File
-echo "$Openwrt_Version" > package/base-files/files/etc/openwrt_info
+echo "$Openwrt_Version" > ./package/base-files/files/etc/openwrt_info
 sed -i "s?Openwrt?Openwrt $Openwrt_Version / AutoUpdate $AutoUpdate_Version?g" package/base-files/files/etc/banner
 }
 
 Diy-Part3() {
+GET_TARGET_INFO
 Default_Firmware=openwrt-$TARGET_BOARD-$TARGET_SUBTARGET-$TARGET_PROFILE-squashfs-sysupgrade.bin
 AutoBuild_Firmware=AutoBuild-$TARGET_PROFILE-Lede-${Openwrt_Version}.bin
 AutoBuild_Detail=AutoBuild-$TARGET_PROFILE-Lede-${Openwrt_Version}.detail
@@ -64,6 +87,19 @@ Firmware_SHA256=$(sha256sum bin/Firmware/$AutoBuild_Firmware | cut -d ' ' -f1)
 echo -e "MD5: $Firmware_MD5\nSHA256: $Firmware_SHA256"
 touch bin/Firmware/$AutoBuild_Detail
 echo -e "\nMD5:$Firmware_MD5\nSHA256:$Firmware_SHA256" >> bin/Firmware/$AutoBuild_Detail
+}
+
+GET_TARGET_INFO() {
+Diy_Core
+AutoUpdate_Version=$(awk 'NR==6' package/base-files/files/bin/AutoUpdate.sh | awk -F '[="]+' '/Version/{print $2}')
+Compile_Date=$(date +'%Y/%m/%d')
+Default_File="package/lean/default-settings/files/zzz-default-settings"
+Lede_Version=$(egrep -o "R[0-9]+\.[0-9]+\.[0-9]+" $Default_File)
+Openwrt_Version="$Lede_Version-`date +%Y%m%d`"
+TARGET_PROFILE=$(egrep -o "CONFIG_TARGET.*DEVICE.*=y" .config | sed -r 's/.*DEVICE_(.*)=y/\1/')
+[ -z "$TARGET_PROFILE" ] && TARGET_PROFILE="$Default_Device"
+TARGET_BOARD=$(awk -F '[="]+' '/TARGET_BOARD/{print $2}' .config)
+TARGET_SUBTARGET=$(awk -F '[="]+' '/TARGET_SUBTARGET/{print $2}' .config)
 }
 
 ExtraPackages() {
@@ -97,48 +133,4 @@ do
 		sleep 3
 	fi
 done
-}
-
-mv2() {
-if [ -f $GITHUB_WORKSPACE/Customize/$1 ];then
-	echo "[$(date "+%H:%M:%S")] Custom File [$1] is detected!"
-	if [ -z $2 ];then
-		Patch_Dir=$GITHUB_WORKSPACE/openwrt
-	else
-		Patch_Dir=$GITHUB_WORKSPACE/openwrt/$2
-	fi
-	[ ! -d $Patch_Dir ] && mkdir -p $Patch_Dir
-	if [ -z $3 ];then
-		[ -f $Patch_Dir/$1 ] && rm -f $Patch_Dir/$1 > /dev/null 2>&1
-		mv -f $GITHUB_WORKSPACE/Customize/$1 $Patch_Dir/$1
-	else
-		[ -f $Patch_Dir/$1 ] && rm -f $Patch_Dir/$3 > /dev/null 2>&1
-		mv -f $GITHUB_WORKSPACE/Customize/$1 $Patch_Dir/$3
-	fi
-else
-	echo "[$(date "+%H:%M:%S")] Custom File [$1] is not detected!"
-fi
-}
-
-GET_INFO() {
-Diy_Core
-AutoUpdate_Version=$(awk 'NR==6' package/base-files/files/bin/AutoUpdate.sh | awk -F '[="]+' '/Version/{print $2}')
-Compile_Date=$(date +'%Y/%m/%d')
-Default_File="package/lean/default-settings/files/zzz-default-settings"
-Lede_Version=$(egrep -o "R[0-9]+\.[0-9]+\.[0-9]+" $Default_File)
-Openwrt_Version="$Lede_Version-`date +%Y%m%d`"
-TARGET_PROFILE=$(egrep -o "CONFIG_TARGET.*DEVICE.*=y" .config | sed -r 's/.*DEVICE_(.*)=y/\1/')
-[ -z "$TARGET_PROFILE" ] && TARGET_PROFILE="$Default_Device"
-TARGET_BOARD=$(awk -F '[="]+' '/TARGET_BOARD/{print $2}' .config)
-TARGET_SUBTARGET=$(awk -F '[="]+' '/TARGET_SUBTARGET/{print $2}' .config)
-echo "$Author" >> $GITHUB_ENV
-echo "$Default_Device" >> $GITHUB_ENV
-echo "$AutoUpdate_Version" >> $GITHUB_ENV
-echo "$Compile_Date" >> $GITHUB_ENV
-echo "$Default_File" >> $GITHUB_ENV
-echo "$Lede_Version" >> $GITHUB_ENV
-echo "$Openwrt_Version" >> $GITHUB_ENV
-echo "$TARGET_PROFILE=$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
-echo "$TARGET_BOARD" >> $GITHUB_ENV
-echo "$TARGET_SUBTARGET" >> $GITHUB_ENV
 }
