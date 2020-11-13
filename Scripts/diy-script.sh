@@ -91,7 +91,7 @@ ExtraPackages svn network/services dnsmasq https://github.com/openwrt/openwrt/tr
 ExtraPackages svn network/services dropbear https://github.com/openwrt/openwrt/trunk/package/network/services
 ExtraPackages svn network/services ppp https://github.com/openwrt/openwrt/trunk/package/network/services
 ExtraPackages git kernel mt76 https://github.com/openwrt master
-ExtraPackages git firmware linux-firmware https://github.com/openwrt/openwrt/trunk/package/firmware
+ExtraPackages svn firmware linux-firmware https://github.com/openwrt/openwrt/trunk/package/firmware
 
 ExtraPackages git lean luci-app-autoupdate https://github.com/Hyy2001X main
 ExtraPackages git lean luci-theme-argon https://github.com/jerrykuku 18.06
