@@ -119,7 +119,7 @@ Replace_File() {
 FILE_NAME=$1
 PATCH_DIR=$GITHUB_WORKSPACE/openwrt/$2
 FILE_RENAME=$3
-
+[ ! -d $PATCH_DIR ] && mkdir $PATCH_DIR
 if [ -f $GITHUB_WORKSPACE/Customize/$FILE_NAME ];then
 	echo "[$(date "+%H:%M:%S")] Customize File [$FILE_NAME] is detected!"
 	if [ -z $FILE_RENAME ];then
