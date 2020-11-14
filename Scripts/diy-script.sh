@@ -47,7 +47,7 @@ echo "Author: $Author"
 echo "Openwrt Version: $Openwrt_Version"
 echo "AutoUpdate Version: $AutoUpdate_Version"
 echo "Router: $TARGET_PROFILE"
-sed -i "s?$Lede_Version?$Lede_Version Compiled by $Author [$Compile_Date]?g" $Default_File
+sed -i "s?$Lede_Version?$Lede_Version Compiled by $Author [$Display_Date]?g" $Default_File
 echo "$Openwrt_Version" > ./package/base-files/files/etc/openwrt_info
 sed -i "s?Openwrt?Openwrt $Openwrt_Version / AutoUpdate $AutoUpdate_Version?g" package/base-files/files/etc/banner
 }
@@ -74,7 +74,7 @@ Diy_Core
 AutoUpdate_Version=$(awk 'NR==6' package/base-files/files/bin/AutoUpdate.sh | awk -F '[="]+' '/Version/{print $2}')
 Default_File="package/lean/default-settings/files/zzz-default-settings"
 Lede_Version=$(egrep -o "R[0-9]+\.[0-9]+\.[0-9]+" $Default_File)
-Openwrt_Version="$Lede_Version-$Compile_Time"
+Openwrt_Version="$Lede_Version-$Compile_Date"
 TARGET_PROFILE=$(egrep -o "CONFIG_TARGET.*DEVICE.*=y" .config | sed -r 's/.*DEVICE_(.*)=y/\1/')
 [ -z "$TARGET_PROFILE" ] && TARGET_PROFILE="$Default_Device"
 TARGET_BOARD=$(awk -F '[="]+' '/TARGET_BOARD/{print $2}' .config)
