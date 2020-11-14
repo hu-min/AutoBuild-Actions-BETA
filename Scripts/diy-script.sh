@@ -12,10 +12,10 @@ Diy-Part1() {
 [ -f feeds.conf.default ] && sed -i "s/#src-git helloworld/src-git helloworld/g" feeds.conf.default
 [ ! -d package/lean ] && mkdir package/lean
 
-mv2 mac80211.sh package/kernel/mac80211/files/lib/wifi
-mv2 system package/base-files/files/etc/config
-mv2 AutoUpdate.sh package/base-files/files/bin
-mv2 banner package/base-files/files/etc
+Replace_File mac80211.sh package/kernel/mac80211/files/lib/wifi
+Replace_File system package/base-files/files/etc/config
+Replace_File AutoUpdate.sh package/base-files/files/bin
+Replace_File banner package/base-files/files/etc
 
 ExtraPackages svn network/services dnsmasq https://github.com/openwrt/openwrt/trunk/package/network/services
 ExtraPackages svn network/services hostapd https://github.com/openwrt/openwrt/trunk/package/network/services
@@ -42,7 +42,7 @@ ExtraPackages svn lean luci-app-socat https://github.com/xiaorouji/openwrt-packa
 
 Diy-Part2() {
 GET_TARGET_INFO
-mv2 mwan3 package/feeds/packages/mwan3/files/etc/config
+Replace_File mwan3 package/feeds/packages/mwan3/files/etc/config
 echo "Author: $Author"
 echo "Openwrt Version: $Openwrt_Version"
 echo "AutoUpdate Version: $AutoUpdate_Version"
@@ -87,6 +87,7 @@ PKG_DIR=$2
 PKG_NAME=$3
 REPO_URL=$4
 REPO_BRANCH=$5
+
 [ -d package/$PKG_DIR/$PKG_NAME ] && rm -rf package/$PKG_DIR/$PKG_NAME
 [ -d $PKG_NAME ] && rm -rf $PKG_NAME
 Retry_Times=3
@@ -114,23 +115,21 @@ do
 done
 }
 
-mv2() {
-if [ -f $GITHUB_WORKSPACE/Customize/$1 ];then
-	echo "[$(date "+%H:%M:%S")] Custom File [$1] is detected!"
-	if [ -z $2 ];then
-		Patch_Dir=$GITHUB_WORKSPACE/openwrt
+Replace_File() {
+FILE_NAME=$1
+PATCH_DIR=$GITHUB_WORKSPACE/openwrt/$2
+FILE_RENAME=$3
+
+if [ -f $GITHUB_WORKSPACE/Customize/$FILE_NAME ];then
+	echo "[$(date "+%H:%M:%S")] Customize File [$FILE_NAME] is detected!"
+	if [ -z $FILE_RENAME ];then
+		[ -f $PATCH_DIR/$FILE_NAME ] && rm -f $PATCH_DIR/$FILE_NAME
+		mv -f $GITHUB_WORKSPACE/Customize/$FILE_NAME $PATCH_DIR/$1
 	else
-		Patch_Dir=$GITHUB_WORKSPACE/openwrt/$2
-	fi
-	[ ! -d $Patch_Dir ] && mkdir -p $Patch_Dir
-	if [ -z $3 ];then
-		[ -f $Patch_Dir/$1 ] && rm -f $Patch_Dir/$1 > /dev/null 2>&1
-		mv -f $GITHUB_WORKSPACE/Customize/$1 $Patch_Dir/$1
-	else
-		[ -f $Patch_Dir/$1 ] && rm -f $Patch_Dir/$3 > /dev/null 2>&1
-		mv -f $GITHUB_WORKSPACE/Customize/$1 $Patch_Dir/$3
+		[ -f $PATCH_DIR/$FILE_NAME ] && rm -f $PATCH_DIR/$3
+		mv -f $GITHUB_WORKSPACE/Customize/$FILE_NAME $PATCH_DIR/$3
 	fi
 else
-	echo "[$(date "+%H:%M:%S")] Custom File [$1] is not detected,skip replace ..."
+	echo "[$(date "+%H:%M:%S")] Customize File [$FILE_NAME] is not detected,skip move ..."
 fi
 }
