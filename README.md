@@ -35,20 +35,23 @@
 
    **二次编译**: 双击右上方 ***Star*** 即可开始编译,最好先同步我的最新改动~~以获得更多特性(bug)~~
 
-   **添加额外的软件包:** 编辑`Scripts/diy-script.sh`中的 `Diy-Part1()` 函数,参照下方语法添加第三方包到源码
+   **添加额外的软件包:** 编辑`Scripts/diy-script.sh`中的`Diy-Part1()`,参照下方语法:
 ```
    [git clone -b]  ExtraPackages git 安装位置 软件包名 Github仓库地址 远程分支
     
    [svn checkout]  ExtraPackages svn 安装位置 软件包名 Github仓库地址/trunk
 ```
 
-   **添加自定义文件:** 首先将文件上传到`/Customize`,然后编辑`Scripts/diy-script.sh`,参照参照现有 `mv2` 语法添加文件到源码中
+   **添加自定义文件:** 首先将文件上传到`/Customize`,然后编辑`Scripts/diy-script.sh`,参照下方语法:
+```
+   [mv -f] Replace_File 文件名称 替换目录 重命名
+```
 
 ## 自动编译&&自动升级:
 
 1. 进入你的`AutoBuild-Actions`仓库
 
-2. 编辑`/.github/workflows/AutoBuild.yml`文件,取消注释`第 21-22 行`,并按需修改 corntab 参数
+2. 编辑`/.github/workflows/AutoBuild.yml`文件,编辑`第 22 行`,并按需修改 corntab 参数
 
 3. 打开 Openwrt 主页,点击`系统`-`定时更新`,设置自动检查升级的时间并保存(**需要 [luci-app-autoupdate](https://github.com/Hyy2001X/luci-app-autoupdate) 支持**)
 
