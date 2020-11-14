@@ -3,7 +3,8 @@
 ![GitHub Stars](https://img.shields.io/github/stars/Hyy2001X/AutoBuild-Actions.svg?style=flat-square&label=Stars&logo=github)
 ![GitHub Forks](https://img.shields.io/github/forks/Hyy2001X/AutoBuild-Actions.svg?style=flat-square&label=Forks&logo=github)
 
-**自动编译:本项目将在每天 19:00 编译新固件
+**自动编译:本项目将在每天 19:00 自动编译新固件,如需自助更新请点击 ***Star*****
+
 **自助更新:如果 Github Releases 已发布当日固件,请不要多次点击** ***Star*** **以节省公共资源**
 
 测试通过的设备: `d-team_newifi-d2`、`phicomm_k2p`
