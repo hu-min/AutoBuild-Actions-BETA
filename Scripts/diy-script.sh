@@ -41,11 +41,10 @@ ExtraPackages svn lean luci-app-socat https://github.com/xiaorouji/openwrt-packa
 }
 
 Diy-Part2() {
-echo "$Compile_Time"
 GET_TARGET_INFO
 mv2 mwan3 package/feeds/packages/mwan3/files/etc/config
 echo "Author: $Author"
-echo "Lede Version: $Openwrt_Version"
+echo "Openwrt Version: $Openwrt_Version"
 echo "AutoUpdate Version: $AutoUpdate_Version"
 echo "Router: $TARGET_PROFILE"
 sed -i "s?$Lede_Version?$Lede_Version Compiled by $Author [$Compile_Date]?g" $Default_File
@@ -71,10 +70,11 @@ echo -e "\nMD5:$Firmware_MD5\nSHA256:$Firmware_SHA256" >> bin/Firmware/$AutoBuil
 
 GET_TARGET_INFO() {
 Diy_Core
+[ -f $GITHUB_WORKSPACE/Openwrt.info ] && . $GITHUB_WORKSPACE/Openwrt.info
 AutoUpdate_Version=$(awk 'NR==6' package/base-files/files/bin/AutoUpdate.sh | awk -F '[="]+' '/Version/{print $2}')
 Default_File="package/lean/default-settings/files/zzz-default-settings"
 Lede_Version=$(egrep -o "R[0-9]+\.[0-9]+\.[0-9]+" $Default_File)
-Openwrt_Version="$Lede_Version-$(date +%Y%m%d)"
+Openwrt_Version="$Lede_Version-$Compile_Time"
 TARGET_PROFILE=$(egrep -o "CONFIG_TARGET.*DEVICE.*=y" .config | sed -r 's/.*DEVICE_(.*)=y/\1/')
 [ -z "$TARGET_PROFILE" ] && TARGET_PROFILE="$Default_Device"
 TARGET_BOARD=$(awk -F '[="]+' '/TARGET_BOARD/{print $2}' .config)
