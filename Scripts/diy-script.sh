@@ -71,10 +71,9 @@ echo -e "\nMD5:$Firmware_MD5\nSHA256:$Firmware_SHA256" >> bin/Firmware/$AutoBuil
 GET_TARGET_INFO() {
 Diy_Core
 AutoUpdate_Version=$(awk 'NR==6' package/base-files/files/bin/AutoUpdate.sh | awk -F '[="]+' '/Version/{print $2}')
-Compile_Date=$(date +'%Y/%m/%d')
 Default_File="package/lean/default-settings/files/zzz-default-settings"
 Lede_Version=$(egrep -o "R[0-9]+\.[0-9]+\.[0-9]+" $Default_File)
-Openwrt_Version="$Lede_Version-`date +%Y%m%d`"
+Openwrt_Version="$Lede_Version-$(date +%Y%m%d)"
 TARGET_PROFILE=$(egrep -o "CONFIG_TARGET.*DEVICE.*=y" .config | sed -r 's/.*DEVICE_(.*)=y/\1/')
 [ -z "$TARGET_PROFILE" ] && TARGET_PROFILE="$Default_Device"
 TARGET_BOARD=$(awk -F '[="]+' '/TARGET_BOARD/{print $2}' .config)
