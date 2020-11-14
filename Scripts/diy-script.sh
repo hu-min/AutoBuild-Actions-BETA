@@ -17,9 +17,9 @@ mv2 system package/base-files/files/etc/config
 mv2 AutoUpdate.sh package/base-files/files/bin
 mv2 banner package/base-files/files/etc
 
-# ExtraPackages svn network/services dnsmasq https://github.com/openwrt/openwrt/trunk/package/network/services
-# ExtraPackages svn network/services hostapd https://github.com/openwrt/openwrt/trunk/package/network/services
-# ExtraPackages svn network/services dropbear https://github.com/openwrt/openwrt/trunk/package/network/services
+ExtraPackages svn network/services dnsmasq https://github.com/openwrt/openwrt/trunk/package/network/services
+ExtraPackages svn network/services hostapd https://github.com/openwrt/openwrt/trunk/package/network/services
+ExtraPackages svn network/services dropbear https://github.com/openwrt/openwrt/trunk/package/network/services
 # ExtraPackages svn network/services ppp https://github.com/openwrt/openwrt/trunk/package/network/services
 # ExtraPackages git kernel mt76 https://github.com/openwrt master
 # ExtraPackages svn firmware linux-firmware https://github.com/openwrt/openwrt/trunk/package/firmware
