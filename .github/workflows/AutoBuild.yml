@@ -20,7 +20,7 @@ on:
 
   schedule:
     - cron: 00 23 * * *
-      
+  
   watch:
     types: [started]
 
@@ -31,6 +31,8 @@ env:
   UPLOAD_RELEASE: true
   UPLOAD_FIRMWARE: true
   UPLOAD_BIN_DIR: false
+  REMOVE_OLD_RELEASE: false
+  DELETE_WORKFLOW_RUNS: true
 
 jobs:
   build:
@@ -115,9 +117,19 @@ jobs:
         tag_name: AutoUpdate
         body_path: update_log.txt
         files: openwrt/bin/Firmware/*
-
-    - name: Remove old Artifacts
-      uses: c-hive/gha-remove-artifacts@v1
+        
+    - name: Delete workflow runs
+      if: env.DELETE_WORKFLOW_RUNS == 'true' && !cancelled()
+      uses: ActionsRML/delete-workflow-runs@main
       with:
-        age: '1 day'
-        skip-recent: 3
+        retain_days: 1
+        keep_minimum_runs: 3
+        
+    - name: Remove old Releases
+      uses: dev-drprasad/delete-older-releases@v0.1.0
+      if: env.REMOVE_OLD_RELEASE == 'true' && !cancelled()
+      with:
+        keep_latest: 3
+        delete_tags: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
