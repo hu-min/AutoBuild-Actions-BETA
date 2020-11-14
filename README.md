@@ -3,6 +3,7 @@
 ![GitHub Stars](https://img.shields.io/github/stars/Hyy2001X/AutoBuild-Actions.svg?style=flat-square&label=Stars&logo=github)
 ![GitHub Forks](https://img.shields.io/github/forks/Hyy2001X/AutoBuild-Actions.svg?style=flat-square&label=Forks&logo=github)
 
+**自动编译:本项目将在每天 19:00 编译新固件
 **自助更新:如果 Github Releases 已发布当日固件,请不要多次点击** ***Star*** **以节省公共资源**
 
 测试通过的设备: `d-team_newifi-d2`、`phicomm_k2p`
@@ -35,14 +36,14 @@
 
    **二次编译**: 双击右上方 ***Star*** 即可开始编译,最好先同步我的最新改动~~以获得更多特性(bug)~~
 
-   **添加额外的软件包:** 编辑`Scripts/diy-script.sh`中的`Diy-Part1()`,参照下方语法:
+   **添加额外的软件包:** 编辑`Scripts/diy-script.sh`,修改`Diy-Part1()`函数,参照下方语法:
 ```
    [git clone -b]  ExtraPackages git 安装位置 软件包名 Github仓库地址 远程分支
     
    [svn checkout]  ExtraPackages svn 安装位置 软件包名 Github仓库地址/trunk
 ```
 
-   **添加自定义文件:** 首先将文件上传到`/Customize`,然后编辑`Scripts/diy-script.sh`,参照下方语法:
+   **添加自定义文件:** 首先将文件上传到`/Customize`,然后修改`Scripts/diy-script.sh`,参照下方语法:
 ```
    [mv -f] Replace_File 文件名称 替换目录 重命名
 ```
