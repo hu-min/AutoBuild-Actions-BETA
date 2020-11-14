@@ -41,6 +41,7 @@ ExtraPackages svn lean luci-app-socat https://github.com/xiaorouji/openwrt-packa
 }
 
 Diy-Part2() {
+echo "$Compile_Time"
 GET_TARGET_INFO
 mv2 mwan3 package/feeds/packages/mwan3/files/etc/config
 echo "Author: $Author"
@@ -130,6 +131,6 @@ if [ -f $GITHUB_WORKSPACE/Customize/$1 ];then
 		mv -f $GITHUB_WORKSPACE/Customize/$1 $Patch_Dir/$3
 	fi
 else
-	echo "[$(date "+%H:%M:%S")] Custom File [$1] is not detected!"
+	echo "[$(date "+%H:%M:%S")] Custom File [$1] is not detected,skip replace ..."
 fi
 }
